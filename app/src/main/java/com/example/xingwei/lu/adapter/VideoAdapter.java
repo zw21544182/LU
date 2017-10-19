@@ -32,6 +32,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     private ViewClick viewClick;
     private boolean isShow;
     private List<String> deletePaths;
+
     public VideoAdapter(List<VideoModern> data, Context context, ViewClick viewClick) {
         this.data = data;
         this.context = context;
@@ -45,6 +46,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         Collections.reverse(data);
         notifyDataSetChanged();
     }
+
     public void setShow(boolean show) {
         isShow = show;
         deletePaths.clear();
@@ -58,16 +60,15 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         Log.d("xwl", "onCreateViewHolder ");
         return videoViewHolder;
     }
+
     public List<String> getDeletePaths() {
         return deletePaths;
     }
 
     @Override
     public void onBindViewHolder(VideoAdapter.VideoViewHolder holder, final int position) {
-        if (data.size() - 1 == position) {
-            holder.last.setVisibility(View.VISIBLE);
-        }
-        VideoViewHolder videoViewHolder = holder;
+
+        final VideoViewHolder videoViewHolder = holder;
         videoViewHolder.ibRename.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,11 +86,17 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 viewClick.rename(data.get(position).getPath());
             }
         });
+        if (data.size() - 1 == position) {
+            videoViewHolder.last.setVisibility(View.VISIBLE);
+        }
         videoViewHolder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("xwl", "data size " + data.size());
-                viewClick.playVideo(data.get(position).getPath());
+                if (!isShow) {
+                    viewClick.playVideo(data.get(position).getPath());
+                } else {
+                    videoViewHolder.chose.setChecked(!videoViewHolder.chose.isChecked());
+                }
             }
         });
         videoViewHolder.ibShare.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +150,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         private ImageButton ibShare;
         private CheckBox chose;
         private View last;
-
 
 
         public VideoViewHolder(View view) {
