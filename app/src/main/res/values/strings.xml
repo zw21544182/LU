@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">LU</string>
+    <string name="title_video">录屏</string>
+    <string name="title_image">截屏</string>
+    <string name="title_record">摄像</string>
+    <string name="title_set">设置</string>
+    <string name="permiss_false">获取权限失败,请先打开设置,获取读写权限</string>
+    <string name="no_start">暂未开始录屏</string>
+    <string name="path">文件路径:</string>
+</resources>
