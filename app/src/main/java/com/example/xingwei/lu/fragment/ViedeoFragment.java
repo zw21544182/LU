@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +22,7 @@ import com.example.xingwei.lu.modern.VideoModern;
 import com.example.xingwei.lu.util.FileUtil;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,6 +37,19 @@ public class ViedeoFragment extends BaseFragment {
     private VideoAdapter videoAdapter;
     private FileUtil fileUtil;
     private RenameDialog renameDialog;
+    private List<VideoModern> videomoderns;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            VideoModern videoModern = (VideoModern) msg.obj;
+            if (videomoderns != null) {
+                videomoderns.add(videoModern);
+                videoAdapter.setData(videomoderns);
+            }
+        }
+    };
+
     @Override
     public void changState() {
         boolean isChose = !MainActivity.fragmentstate;
@@ -57,9 +73,11 @@ public class ViedeoFragment extends BaseFragment {
     public void initData(@Nullable Bundle savedInstanceState) {
         Log.d("xwl", "VideoFragment initData");
         fileUtil = new FileUtil();
+        videomoderns = new ArrayList<>();
         rvVideo.setLayoutManager(new LinearLayoutManager(getContext()));
-        List<VideoModern> videoModerns = fileUtil.getVideoInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Video");
-        videoAdapter = new VideoAdapter(videoModerns, getActivity(), new VideoAdapter.ViewClick() {
+        videomoderns.clear();
+        fileUtil.getVideoInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Video", handler);
+        videoAdapter = new VideoAdapter(videomoderns, getActivity(), new VideoAdapter.ViewClick() {
             @Override
             public void playVideo(String path) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -119,6 +137,7 @@ public class ViedeoFragment extends BaseFragment {
                 getActivity().startActivity(intent);
             }
         });
+
         rvVideo.setAdapter(videoAdapter);
     }
 
@@ -136,15 +155,16 @@ public class ViedeoFragment extends BaseFragment {
     protected void updateData() {
         super.updateData();
 
-        List<VideoModern> videoModerns = new FileUtil().getVideoInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Video");
-        Log.d("xwl", "image data size " + videoModerns.size());
-        videoAdapter.setData(videoModerns);
-
+        videomoderns.clear();
+        fileUtil.getVideoInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Video", handler);
+        videoAdapter.setData(videomoderns);
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        List<VideoModern> videoModerns = fileUtil.getVideoInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Video");
-        videoAdapter.setData(videoModerns);
+        videomoderns.clear();
+        fileUtil.getVideoInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Video", handler);
+        videoAdapter.setData(videomoderns);
     }
 }
