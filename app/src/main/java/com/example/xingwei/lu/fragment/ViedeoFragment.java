@@ -75,8 +75,6 @@ public class ViedeoFragment extends BaseFragment {
         fileUtil = new FileUtil();
         videomoderns = new ArrayList<>();
         rvVideo.setLayoutManager(new LinearLayoutManager(getContext()));
-        videomoderns.clear();
-        fileUtil.getVideoInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Video", handler);
         videoAdapter = new VideoAdapter(videomoderns, getActivity(), new VideoAdapter.ViewClick() {
             @Override
             public void playVideo(String path) {
@@ -137,8 +135,9 @@ public class ViedeoFragment extends BaseFragment {
                 getActivity().startActivity(intent);
             }
         });
-
         rvVideo.setAdapter(videoAdapter);
+        fileUtil.getVideoInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Video", handler);
+
     }
 
     @Override
@@ -154,17 +153,10 @@ public class ViedeoFragment extends BaseFragment {
     @Override
     protected void updateData() {
         super.updateData();
-
         videomoderns.clear();
         fileUtil.getVideoInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Video", handler);
-        videoAdapter.setData(videomoderns);
+
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        videomoderns.clear();
-        fileUtil.getVideoInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Video", handler);
-        videoAdapter.setData(videomoderns);
-    }
+
 }

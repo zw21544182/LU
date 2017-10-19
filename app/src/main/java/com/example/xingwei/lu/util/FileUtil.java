@@ -27,14 +27,10 @@ public class FileUtil {
     public static final int IMAGE = 44;
     public static final int VIDEO = 2;
     public static final int MOVIE = 3;
-
     List<VideoModern> videoModerns;
     List<VideoModern> movieModerns;
     List<ImageModern> imageModerns;
-    private FileUtil fileUtil;
     SimpleDateFormat dateFormat, format;
-    private File file;
-
     public FileUtil() {
         dateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
         format = new SimpleDateFormat("yyyy年MM月dd日");

@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     btChose.setText("开始");
                     tvTitle.setText("录像");
                     if (recordFragment == null)
-                        recordFragment = new RecordFragment();
+                        recordFragment = new RecordFragment( Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Movie");
                     switchFragment(recordFragment);
                     return true;
                 case R.id.navigation_notifications:

@@ -55,11 +55,15 @@ public class RecordFragment extends BaseFragment {
 
     }
 
+    public RecordFragment(String path) {
+        this.path = path;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         videomoderns.clear();
-        fileUtil.getVideoInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Movie", handler);
+        fileUtil.getVideoInfoByPath(path, handler);
         videoAdapter.setData(videomoderns);
     }
 
@@ -81,7 +85,6 @@ public class RecordFragment extends BaseFragment {
         fileUtil = new FileUtil();
         videomoderns = new ArrayList<>();
         rvVideo.setLayoutManager(new LinearLayoutManager(getContext()));
-        fileUtil.getVideoInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Movie", handler);
         videoAdapter = new VideoAdapter(videomoderns, getActivity(), new VideoAdapter.ViewClick() {
             @Override
             public void playVideo(String path) {
@@ -93,7 +96,7 @@ public class RecordFragment extends BaseFragment {
             }
 
             @Override
-            public void rename(String path) {
+            public void rename(final String path) {
                 Log.d("XWL", "FILE PATH" + path);
                 final File file = new File(path);
                 String oldName = file.getName().substring(0, file.getName().length() - 4);
@@ -111,7 +114,7 @@ public class RecordFragment extends BaseFragment {
                                     file.renameTo(new File(file.getParent() + "/" + newName + ".mp4"));
                                     showToast("更新");
                                     videomoderns.clear();
-                                    new FileUtil().getVideoInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Movie", handler
+                                    new FileUtil().getVideoInfoByPath(path, handler
                                     );
                                     videoAdapter.setData(videomoderns);
                                     renameDialog.dismiss();
