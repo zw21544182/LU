@@ -151,11 +151,12 @@ public class ViedeoFragment extends BaseFragment {
     }
 
     @Override
-    protected void updateData() {
-        super.updateData();
-        videomoderns.clear();
-        fileUtil.getVideoInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Video", handler);
-
+    protected void updateData(String type) {
+        super.updateData(type);
+        if (type.equals("video")) {
+            videomoderns.clear();
+            fileUtil.getVideoInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Video", handler);
+        }
     }
 
 

@@ -155,13 +155,13 @@ public class ImageFragment extends BaseFragment {
 
 
     @Override
-    protected void updateData() {
-        super.updateData();
-
+    protected void updateData(String type) {
+        super.updateData(type);
+        if (type.equals("image")) {
             List<ImageModern> videoModerns = new FileUtil().getImageInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Pictures");
             Log.d("xwl", "image data size " + videoModerns.size());
             imageAdapter.setData(videoModerns);
-
+        }
     }
 
 

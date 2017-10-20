@@ -58,6 +58,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Handler handler;
     private boolean isRecord = false;
     private static final int DELETESUCESS = 3;
+    public static boolean fragmentstate = false;
+    private BottomNavigationView navigation;
+    private PopupWindow popupWindow;
+    private boolean isExit;
+    private Intent serviceIntent;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -90,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     btChose.setText("开始");
                     tvTitle.setText("录像");
                     if (recordFragment == null)
-                        recordFragment = new RecordFragment( Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Movie");
+                        recordFragment = new RecordFragment(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Movie");
                     switchFragment(recordFragment);
                     return true;
                 case R.id.navigation_notifications:
@@ -105,10 +110,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     };
-    public static boolean fragmentstate = false;
-    private BottomNavigationView navigation;
-    private PopupWindow popupWindow;
-    private boolean isExit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,9 +141,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         };
-        onCallPermission();
         initView();
         event();
+        onCallPermission();
     }
 
     private void event() {
@@ -191,11 +192,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startIntent() {
+        Log.d("xwl", "startIntent");
         if (intent != null && result != 0) {
             ((MyApp) getApplication()).setResultCode(result);
             ((MyApp) getApplication()).setResultIntent(intent);
-            Intent intent = new Intent(getApplicationContext(), MainService.class);
-            startService(intent);
+            serviceIntent = new Intent(getApplicationContext(), MainService.class);
+            startService(serviceIntent);
         } else {
             if (mMediaProjectionManager != null) {
                 startActivityForResult(mMediaProjectionManager.createScreenCaptureIntent(), REQUEST_MEDIA_PROJECTION);
@@ -213,10 +215,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else if (data != null && resultCode != 0) {
                 result = resultCode;
                 intent = data;
-                ((MyApp) getApplication()).setResultCode(resultCode);
-                ((MyApp) getApplication()).setResultIntent(data);
-                Intent intent = new Intent(getApplicationContext(), MainService.class);
-                startService(intent);
+                startIntent();
 
             }
         }
@@ -363,7 +362,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             handler.sendEmptyMessageDelayed(0, 2000);
         } else {
             finish();
-            System.exit(0);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("xwl","activity destroy");
+        stopService(serviceIntent);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //super.onSaveInstanceState(outState);    //将这一行注释掉，阻止activity保存fragment的状态,解决Fragment穿透重叠现象
     }
 }

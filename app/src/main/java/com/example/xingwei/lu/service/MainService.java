@@ -183,9 +183,9 @@ public class MainService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d("xwl", "service destory");
         notificationManager.cancel(NOTIFICATION_ID);
-        Intent intent = new Intent(getApplicationContext(), MainService.class);
-        startService(intent);
+
     }
 
     private void virtualDisplay() {
@@ -292,15 +292,21 @@ public class MainService extends Service {
                 isStart = false;
                 notification.contentView = remoteView;
                 notificationManager.notify(NOTIFICATION_ID, notification);
-                sendInfoToActivity();
+                sendInfoToActivity(R.id.ivStop);
             } else {
                 toastUtil.showToast(getString(R.string.no_start));
             }
         }
 
-        private void sendInfoToActivity() {
+        private void sendInfoToActivity(int viewId) {
             Intent intent = new Intent();
-                intent.setAction("com.audioeadd");
+            intent.setAction("com.audioeadd");
+            if (viewId == R.id.ivImage) {
+                intent.putExtra("type", "image");
+            } else {
+                intent.putExtra("type", "video");
+
+            }
             sendBroadcast(intent);
 
         }
@@ -345,7 +351,7 @@ public class MainService extends Service {
                     out.close();
                     Log.d("xwl", "sucess");
                     toastUtil.showToast("图片保存成功");
-                    sendInfoToActivity();
+                    sendInfoToActivity(R.id.ivImage);
 
                 }
             } catch (FileNotFoundException e) {

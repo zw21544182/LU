@@ -89,11 +89,11 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     public class AudioBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            updateData();
+            updateData(intent.getExtras().getString("type"));
         }
     }
 
-    protected void updateData() {
+    protected void updateData(String type) {
     }
 
     @Override

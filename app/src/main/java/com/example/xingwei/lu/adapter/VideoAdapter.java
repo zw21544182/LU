@@ -162,8 +162,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             ibShare = (ImageButton) view.findViewById(R.id.ibShare);
             chose = (CheckBox) view.findViewById(R.id.chose);
             chose.setVisibility(View.INVISIBLE);
-            last = (View) view.findViewById(R.id.last);
-
+            last =  view.findViewById(R.id.last);
+            last.setVisibility(View.INVISIBLE);
         }
 
 
