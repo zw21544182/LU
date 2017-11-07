@@ -59,13 +59,14 @@ public class PhotographActivity extends Activity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
+        initCamera();
         initView();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        initCamera();
+
     }
 
     private void initView() {

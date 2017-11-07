@@ -62,8 +62,8 @@ public class SetFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case SELECT_PHOTO:
-                Uri imageUri = data.getData();
-                if (null != imageUri) {
+                if (null != data) {
+                    Uri imageUri = data.getData();
                     String imagePath = getImagePathFromUri(getActivity(), imageUri);
                     SharedPreferencesUtil.setParam(getActivity(), "headimage", imagePath);
                     imageView.setImageURI(imageUri);

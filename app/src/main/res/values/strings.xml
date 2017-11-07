@@ -7,4 +7,5 @@
     <string name="permiss_false">获取权限失败,请先打开设置,获取读写权限</string>
     <string name="no_start">暂未开始录屏</string>
     <string name="path">文件路径:</string>
+    <string name="accessibility_description">测试</string>
 </resources>

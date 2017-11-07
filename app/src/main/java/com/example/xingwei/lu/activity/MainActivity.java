@@ -116,6 +116,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         Log.d("xwl", "oncreate");
         setContentView(R.layout.activity_main);
+        initView();
+        event();
+        onCallPermission();
         toastUtil = ToastUtil.getInstance(this);
         if (savedInstanceState == null) {
             mMediaProjectionManager = (MediaProjectionManager) getApplication().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
@@ -141,9 +144,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         };
-        initView();
-        event();
-        onCallPermission();
     }
 
     private void event() {
@@ -368,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("xwl","activity destroy");
+        Log.d("xwl", "activity destroy");
         stopService(serviceIntent);
     }
 

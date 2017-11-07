@@ -3,6 +3,8 @@ package com.example.xingwei.lu.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 
 import com.example.xingwei.lu.R;
@@ -16,14 +18,26 @@ import com.example.xingwei.lu.util.SharedPreferencesUtil;
 
 public class SplashActivity extends Activity {
     private boolean isFirst;
+    private Handler handler;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         isFirst = (boolean) SharedPreferencesUtil.getParam(this, "isFirst", true);
         if (isFirst) {
             setContentView(R.layout.activity_splash);
             SharedPreferencesUtil.setParam(this, "isFirst", false);
+            handler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    super.handleMessage(msg);
+                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+
+                }
+            };
             new Thread() {
                 @Override
                 public void run() {
