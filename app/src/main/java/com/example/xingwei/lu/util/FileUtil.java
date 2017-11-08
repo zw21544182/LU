@@ -7,6 +7,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.example.xingwei.lu.modern.ImageModern;
+import com.example.xingwei.lu.modern.PdfModule;
 import com.example.xingwei.lu.modern.VideoModern;
 
 import java.io.File;
@@ -154,6 +155,28 @@ public class FileUtil {
         int second = time / 1000;
         duration = "时长: " + hour + " 时 " + minute + " 分 " + second + " 秒";
         return duration;
+    }
+
+    public void initAllPdfFiles(File root) {
+        PdfModule pdfModule = new PdfModule();
+        File files[] = root.listFiles();
+
+        if (files != null)
+            for (File f : files) {
+
+                if (f.isDirectory()) {
+                    initAllPdfFiles(f);
+                } else {
+                    if (f.getName().contains(".pdf")) {
+                        if (f.getName().substring(f.getName().length() - 4, f.getName().length()).equals(".pdf")) {
+                            pdfModule.setPath(f.getPath());
+                            pdfModule.setTime(getTimeByName(f.getPath()));
+                            pdfModule.save();
+                            pdfModule.clearSavedState();
+                        }
+                    }
+                }
+            }
     }
 
     public boolean isRename(String newName, int type) {

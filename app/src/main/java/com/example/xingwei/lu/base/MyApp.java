@@ -1,8 +1,9 @@
 package com.example.xingwei.lu.base;
 
-import android.app.Application;
 import android.content.Intent;
 import android.media.projection.MediaProjectionManager;
+
+import org.litepal.LitePalApplication;
 
 /**
  * 创建时间: 2017/10/17
@@ -10,7 +11,7 @@ import android.media.projection.MediaProjectionManager;
  * 功能描述:
  */
 
-public class MyApp extends Application {
+public class MyApp extends LitePalApplication {
     private String appFilePath;
 
     @Override

@@ -1,6 +1,11 @@
 package com.example.xingwei.lu.fragment;
 
+import android.app.ProgressDialog;
+import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,8 +14,13 @@ import android.view.View;
 
 import com.example.xingwei.lu.R;
 import com.example.xingwei.lu.base.BaseFragment;
+import com.example.xingwei.lu.modern.PdfModule;
+import com.example.xingwei.lu.util.FileUtil;
+
+import org.litepal.crud.DataSupport;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * 创建时间: 2017/11/8
@@ -20,7 +30,12 @@ import java.io.File;
 
 public class PdfFragment extends BaseFragment {
     private RecyclerView rvPdf;
-
+    private FileUtil fileUtil;
+    private ProgressDialog progressDialog;
+    private List<PdfModule> pdfModules;
+    private Handler handler;
+    private static final int GETPDFSUCESS = 33;
+    private PdfDocument pdfDocument;
 
     @Override
     public void changState() {
@@ -40,6 +55,30 @@ public class PdfFragment extends BaseFragment {
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
+        fileUtil = new FileUtil();
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
+            }
+        };
+        if (DataSupport.findAll(PdfModule.class).size() == 0) {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(getActivity());
+                progressDialog.setTitle("pdf文件扫描中");
+            }
+            new Thread() {
+                public void run() {
+                    super.run();
+                    fileUtil.initAllPdfFiles(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+                    pdfModules = DataSupport.findAll(PdfModule.class);
+                    handler.sendEmptyMessage(GETPDFSUCESS);
+                }
+            }.start();
+        }
 
     }
 
@@ -48,20 +87,6 @@ public class PdfFragment extends BaseFragment {
 
     }
 
-    private void getAllFiles(File root) {
-
-        File files[] = root.listFiles();
-
-        if (files != null)
-            for (File f : files) {
-
-                if (f.isDirectory()) {
-                    getAllFiles(f);
-                } else {
-                    if (f.getName().contains(".pdf")) ;
-                }
-            }
-    }
 
     @Override
     protected void updateData(String type) {
