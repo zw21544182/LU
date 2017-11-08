@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.example.xingwei.lu.R;
+import com.example.xingwei.lu.activity.PdfActivity;
 import com.example.xingwei.lu.base.BaseFragment;
 import com.example.xingwei.lu.util.SharedPreferencesUtil;
 import com.example.xingwei.lu.util.ToastUtil;
@@ -35,6 +36,7 @@ public class SetFragment extends BaseFragment {
     private LinearLayout weixin;
     private ToastUtil toastUtil;
     private String headImagePath;
+    private LinearLayout llPdf;
 
     @Override
     public void changState() {
@@ -79,6 +81,7 @@ public class SetFragment extends BaseFragment {
         imageView = (CircleImageView) view.findViewById(R.id.imageView);
         about = (LinearLayout) view.findViewById(R.id.about);
         update = (LinearLayout) view.findViewById(R.id.update);
+        llPdf = (LinearLayout) view.findViewById(R.id.llPdf);
         size = (LinearLayout) view.findViewById(R.id.size);
         weixin = (LinearLayout) view.findViewById(R.id.weixin);
 
@@ -88,6 +91,7 @@ public class SetFragment extends BaseFragment {
     protected void initEvent() {
         super.initEvent();
         imageView.setOnClickListener(this);
+        llPdf.setOnClickListener(this);
     }
 
     @Override
@@ -100,7 +104,19 @@ public class SetFragment extends BaseFragment {
 
     @Override
     public void click(View view) {
-        openAlbum();
+        switch (view.getId()) {
+            case R.id.imageView:
+                openAlbum();
+                break;
+            case R.id.llPdf:
+                enterPdf();
+                break;
+        }
+    }
+
+    private void enterPdf() {
+        Intent intent = new Intent(getActivity(), PdfActivity.class);
+        startActivity(intent);
     }
 
     public String getImagePathFromUri(final Context context, Uri picUri) {

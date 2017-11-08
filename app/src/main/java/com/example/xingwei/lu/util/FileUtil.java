@@ -31,6 +31,7 @@ public class FileUtil {
     List<VideoModern> movieModerns;
     List<ImageModern> imageModerns;
     SimpleDateFormat dateFormat, format;
+
     public FileUtil() {
         dateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
         format = new SimpleDateFormat("yyyy年MM月dd日");
@@ -44,11 +45,13 @@ public class FileUtil {
         }
         videoModerns.clear();
         File file = new File(path);
+
         if (!file.exists()) {
             return;
         }
         final File[] videoFiles = file.listFiles();
         if (videoFiles.length == 0) {
+            handler.sendEmptyMessage(0);
             return;
         }
         new Thread() {
@@ -65,6 +68,7 @@ public class FileUtil {
                     videoModern.setDuration(getRingDuring(videoFile.getAbsolutePath()));
                     videoModern.setTime("保存于 " + getTimeByName(videoFile.getPath()));
                     message.obj = videoModern;
+                    message.what = 1;
                     handler.sendMessage(message);
                 }
             }

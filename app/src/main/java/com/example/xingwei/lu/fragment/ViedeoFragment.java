@@ -42,11 +42,20 @@ public class ViedeoFragment extends BaseFragment {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            VideoModern videoModern = (VideoModern) msg.obj;
-            if (videomoderns != null) {
-                videomoderns.add(videoModern);
-                videoAdapter.setData(videomoderns);
+            switch (msg.what) {
+                case 0:
+                    videoAdapter.setData(videomoderns);
+                    break;
+                case 1:
+                    VideoModern videoModern = (VideoModern) msg.obj;
+                    if (videomoderns != null) {
+                        videomoderns.add(videoModern);
+                        videoAdapter.setData(videomoderns);
+                    }
+                    break;
             }
+
+
         }
     };
 

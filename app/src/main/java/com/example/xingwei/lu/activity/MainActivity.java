@@ -31,6 +31,7 @@ import com.example.xingwei.lu.R;
 import com.example.xingwei.lu.base.BaseFragment;
 import com.example.xingwei.lu.base.MyApp;
 import com.example.xingwei.lu.fragment.ImageFragment;
+import com.example.xingwei.lu.fragment.PdfFragment;
 import com.example.xingwei.lu.fragment.RecordFragment;
 import com.example.xingwei.lu.fragment.SetFragment;
 import com.example.xingwei.lu.fragment.ViedeoFragment;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ViedeoFragment viedeoFragment;
     private ImageFragment imageFragment;
     private RecordFragment recordFragment;
+    private PdfFragment pdfFragment;
     private SetFragment setFragment;
     private TextView tvTitle;
     private Button btChose;
@@ -83,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case R.id.navigation_dashboard:
                     btChose.setVisibility(View.VISIBLE);
                     btChose.setText("选择");
-
                     tvTitle.setText("截图");
                     if (imageFragment == null)
                         imageFragment = new ImageFragment();
@@ -105,6 +106,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         setFragment = new SetFragment();
                     switchFragment(setFragment);
                     return true;
+                case R.id.navigation_pdf:
+                    tvTitle.setText("课件");
+
+                    if (pdfFragment == null)
+                        pdfFragment = new PdfFragment();
+                    switchFragment(pdfFragment);
+                    return true;
+
+
             }
             return false;
         }
@@ -117,12 +127,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d("xwl", "oncreate");
         setContentView(R.layout.activity_main);
         initView();
+        initData();
         event();
         onCallPermission();
-        toastUtil = ToastUtil.getInstance(this);
-        if (savedInstanceState == null) {
-            mMediaProjectionManager = (MediaProjectionManager) getApplication().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-        }
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -136,6 +143,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         popupWindow.dismiss();
                         Intent intent = new Intent();
                         intent.setAction("com.audioeadd");
+                        if (mCurrentFrgment instanceof ViedeoFragment) {
+                            intent.putExtra("type", "video");
+                        } else {
+                            intent.putExtra("type", "image");
+                        }
+
                         sendBroadcast(intent);
                         break;
                     case 0:
@@ -144,6 +157,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         };
+    }
+
+    private void initData() {
+        toastUtil = ToastUtil.getInstance(this);
+        mMediaProjectionManager = (MediaProjectionManager) getApplication().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+
     }
 
     private void event() {
@@ -194,15 +213,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void startIntent() {
         Log.d("xwl", "startIntent");
         if (intent != null && result != 0) {
+            Log.d("xwl", "ssssssss");
+
             ((MyApp) getApplication()).setResultCode(result);
             ((MyApp) getApplication()).setResultIntent(intent);
             serviceIntent = new Intent(getApplicationContext(), MainService.class);
             startService(serviceIntent);
         } else {
-            if (mMediaProjectionManager != null) {
-                startActivityForResult(mMediaProjectionManager.createScreenCaptureIntent(), REQUEST_MEDIA_PROJECTION);
-                ((MyApp) getApplication()).setMpmngr(mMediaProjectionManager);
-            }
+            Log.d("zw", "intent null");
+            Log.d("zw", "ssssssss");
+            startActivityForResult(mMediaProjectionManager.createScreenCaptureIntent(), REQUEST_MEDIA_PROJECTION);
+            ((MyApp) getApplication()).setMpmngr(mMediaProjectionManager);
+
         }
     }
 

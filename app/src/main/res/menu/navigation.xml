@@ -14,7 +14,10 @@
         android:id="@+id/navigation_record"
         android:icon="@drawable/record"
         android:title="@string/title_record" />
-
+    <item
+        android:id="@+id/navigation_pdf"
+        android:icon="@drawable/pdf"
+        android:title="@string/pdf" />
     <item
         android:id="@+id/navigation_notifications"
         android:icon="@drawable/seeting"
