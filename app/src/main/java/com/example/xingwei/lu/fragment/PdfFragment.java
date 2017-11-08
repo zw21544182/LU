@@ -83,6 +83,11 @@ public class PdfFragment extends BaseFragment {
     }
 
     @Override
+    public List<String> getDeletePaths() {
+        return super.getDeletePaths();
+    }
+
+    @Override
     public void click(View view) {
 
     }

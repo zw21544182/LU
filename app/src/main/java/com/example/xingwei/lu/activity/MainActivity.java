@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.projection.MediaProjectionManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -128,8 +127,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         initView();
         initData();
-        event();
-        onCallPermission();
+
+
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -184,21 +183,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void onCallPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//判断当前系统的SDK版本是否大于23
-            //如果当前申请的权限没有授权
-            if (!(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-                //第一次请求权限的时候返回false,第二次shouldShowRequestPermissionRationale返回true
-                //如果用户选择了“不再提醒”永远返回false。
-                if (shouldShowRequestPermissionRationale(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if ((checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+            //第一次请求权限的时候返回false,第二次shouldShowRequestPermissionRationale返回true
+            //如果用户选择了“不再提醒”永远返回false。
+            if (shouldShowRequestPermissionRationale(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
-                }
-                //请求权限
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            } else {//已经授权了就走这条分支
-                createRootPath();
-                startIntent();
             }
+            //请求权限
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        } else {//已经授权了就走这条分支
+            event();
+            createRootPath();
+            startIntent();
         }
+
     }
 
     private void createRootPath() {
@@ -263,10 +261,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (requestCode == 1) {
             if (permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //得到权限之后去做的业务
+                event();
                 createRootPath();
                 startIntent();
             } else {//没有获得到权限
                 toastUtil.showToast(getString(R.string.permiss_false));
+                finish();
             }
         }
 
@@ -343,6 +343,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            onCallPermission();
+
+        }
+    }
 
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
@@ -394,8 +402,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         stopService(serviceIntent);
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        //super.onSaveInstanceState(outState);    //将这一行注释掉，阻止activity保存fragment的状态,解决Fragment穿透重叠现象
-    }
 }
