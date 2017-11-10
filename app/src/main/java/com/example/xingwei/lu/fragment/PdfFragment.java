@@ -1,25 +1,22 @@
 package com.example.xingwei.lu.fragment;
 
-import android.app.ProgressDialog;
-import android.graphics.pdf.PdfDocument;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.example.xingwei.lu.R;
+import com.example.xingwei.lu.adapter.PdfAdapter;
 import com.example.xingwei.lu.base.BaseFragment;
 import com.example.xingwei.lu.modern.PdfModule;
-import com.example.xingwei.lu.util.FileUtil;
+import com.example.xingwei.lu.service.FileServer;
 
 import org.litepal.crud.DataSupport;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -30,12 +27,8 @@ import java.util.List;
 
 public class PdfFragment extends BaseFragment {
     private RecyclerView rvPdf;
-    private FileUtil fileUtil;
-    private ProgressDialog progressDialog;
     private List<PdfModule> pdfModules;
-    private Handler handler;
-    private static final int GETPDFSUCESS = 33;
-    private PdfDocument pdfDocument;
+    private PdfAdapter pdfAdapter;
 
     @Override
     public void changState() {
@@ -44,41 +37,28 @@ public class PdfFragment extends BaseFragment {
 
     @Override
     public View initView(LayoutInflater inflater) {
-        return inflater.inflate(R.layout.fragment_pdf, null);
+        View view = inflater.inflate(R.layout.fragment_pdf, null);
+        initFindViewById(view);
+        return view;
     }
 
     @Override
     public void initFindViewById(View view) {
         rvPdf = (RecyclerView) view.findViewById(R.id.rvPdf);
-
     }
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        fileUtil = new FileUtil();
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if (progressDialog != null && progressDialog.isShowing()) {
-                    progressDialog.dismiss();
-                }
-            }
-        };
-        if (DataSupport.findAll(PdfModule.class).size() == 0) {
-            if (progressDialog == null) {
-                progressDialog = new ProgressDialog(getActivity());
-                progressDialog.setTitle("pdf文件扫描中");
-            }
-            new Thread() {
-                public void run() {
-                    super.run();
-                    fileUtil.initAllPdfFiles(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-                    pdfModules = DataSupport.findAll(PdfModule.class);
-                    handler.sendEmptyMessage(GETPDFSUCESS);
-                }
-            }.start();
-        }
+        Log.d("zw", "pdffragment initdata");
+        Intent intent = new Intent(getActivity(), FileServer.class);
+        getActivity().startService(intent);
+        rvPdf.setLayoutManager(new LinearLayoutManager(getActivity()));
+        pdfModules = DataSupport.findAll(PdfModule.class);
+
+            pdfAdapter = new PdfAdapter(pdfModules, getActivity());
+            rvPdf.setAdapter(pdfAdapter);
+
+
 
     }
 
@@ -100,6 +80,12 @@ public class PdfFragment extends BaseFragment {
         {
             Log.d("Zw", "update pdfUI");
             // TODO: 2017/11/8 更新pdfUI操作
+            pdfModules = DataSupport.findAll(PdfModule.class);
+            if (pdfModules.size() == 0) {
+                showToast("暂无pdf文件");
+                return;
+            }
+            pdfAdapter.setData(pdfModules);
         }
     }
 }

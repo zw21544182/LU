@@ -40,6 +40,7 @@ public class FileUtil {
 
     }
 
+
     public void getVideoInfoByPath(String path, final Handler handler) {
         if (videoModerns == null) {
             videoModerns = new ArrayList<>();
@@ -51,6 +52,10 @@ public class FileUtil {
             return;
         }
         final File[] videoFiles = file.listFiles();
+        if (videoFiles == null) {
+            handler.sendEmptyMessage(0);
+            return;
+        }
         if (videoFiles.length == 0) {
             handler.sendEmptyMessage(0);
             return;
@@ -157,27 +162,31 @@ public class FileUtil {
         return duration;
     }
 
-    public void initAllPdfFiles(File root) {
+    public void checkPdf(String strPath) {
         PdfModule pdfModule = new PdfModule();
-        File files[] = root.listFiles();
+        File dir = new File(strPath);
+        File[] files = dir.listFiles(); // 该文件目录下文件全部放入数组
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                String fileName = files[i].getName();
+                if (files[i].isDirectory()) { // 判断是文件还是文件夹
+                    checkPdf(files[i].getAbsolutePath()); // 获取文件绝对路径
+                } else if (fileName.endsWith("pdf")) { // 判断文件名是否以.pdf结尾
+                    String strFileName = files[i].getAbsolutePath();
+                    pdfModule.setName(fileName);
+                    pdfModule.setPath(strFileName);
+                    pdfModule.setTime(getTimeByName(strFileName));
+                    pdfModule.saveOrUpdate("path = ?", pdfModule.getPath());
+                    pdfModule.clearSavedState();
 
-        if (files != null)
-            for (File f : files) {
-
-                if (f.isDirectory()) {
-                    initAllPdfFiles(f);
                 } else {
-                    if (f.getName().contains(".pdf")) {
-                        if (f.getName().substring(f.getName().length() - 4, f.getName().length()).equals(".pdf")) {
-                            pdfModule.setPath(f.getPath());
-                            pdfModule.setTime(getTimeByName(f.getPath()));
-                            pdfModule.save();
-                            pdfModule.clearSavedState();
-                        }
-                    }
+                    continue;
                 }
             }
+        }
+
     }
+
 
     public boolean isRename(String newName, int type) {
         String path = "";

@@ -18,6 +18,8 @@ public class MyApp extends LitePalApplication {
     public void onCreate() {
         super.onCreate();
         appFilePath = getFilesDir().getAbsolutePath();
+
+
     }
 
     public String getAppFilePath() {

@@ -11,6 +11,15 @@ import org.litepal.crud.DataSupport;
 public class PdfModule extends DataSupport {
     private String path;
     private String time;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getTime() {
         return time;

@@ -1,12 +1,15 @@
 package com.example.xingwei.lu.activity;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -39,6 +42,7 @@ public class PhotographActivity extends Activity implements View.OnClickListener
     SimpleDateFormat dateFormat;
     private String path = Environment.getExternalStorageDirectory().getPath() + "/LU/Movie";
     private boolean isStart = false;
+    private int requestcode;
 
     @Override
     protected void onDestroy() {
@@ -59,14 +63,30 @@ public class PhotographActivity extends Activity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
-        initCamera();
-        initView();
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, requestcode);
+        } else {
+            initCamera();
+            initView();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d("zw", "onRequestPermissionsResult");
+        if (requestCode == requestcode) {
+            if (permissions[0].equals(Manifest.permission.CAMERA) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("zw", "permision suxes");
+                initCamera();
+                initView();
+            }
+        }
     }
 
     private void initView() {
@@ -215,12 +235,10 @@ public class PhotographActivity extends Activity implements View.OnClickListener
             mMediaRecorder.setOnErrorListener(null);
             mMediaRecorder.setPreviewDisplay(surfaceView.getHolder().getSurface());
             mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);// 视频源
-            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);// 音频源率，然后就清晰了
             mMediaRecorder.setOrientationHint(90);// 输出旋转90度，保持竖屏录制
             mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);// 视频输出格式
             mMediaRecorder.setVideoSize(640, 480);
             mMediaRecorder.setVideoEncodingBitRate(5 * 1024 * 1024);
-            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);// 音频格式
             mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);// 视频录制格式
             // 设置视频录制的分辨率。必须放在设置编码和格式的后面，否则报错
             File file = new File(path);

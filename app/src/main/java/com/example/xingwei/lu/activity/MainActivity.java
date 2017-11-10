@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private BottomNavigationView navigation;
     private PopupWindow popupWindow;
     private boolean isExit;
+    private boolean isPermission;
     private Intent serviceIntent;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -107,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     return true;
                 case R.id.navigation_pdf:
                     tvTitle.setText("课件");
-
                     if (pdfFragment == null)
                         pdfFragment = new PdfFragment();
                     switchFragment(pdfFragment);
@@ -125,9 +125,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         Log.d("xwl", "oncreate");
         setContentView(R.layout.activity_main);
+
         initView();
         initData();
-
+        event();
 
         handler = new Handler() {
             @Override
@@ -192,7 +193,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //请求权限
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         } else {//已经授权了就走这条分支
-            event();
+            if (viedeoFragment != null) {
+                viedeoFragment.initData(null);
+            }
             createRootPath();
             startIntent();
         }
@@ -261,7 +264,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (requestCode == 1) {
             if (permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //得到权限之后去做的业务
-                event();
+                if (viedeoFragment != null) {
+                    viedeoFragment.initData(null);
+                }
                 createRootPath();
                 startIntent();
             } else {//没有获得到权限
@@ -346,7 +351,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
+        isPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ?
+                true : false;
+        if (isPermission) {
+            startIntent();
+        }
+        if (hasFocus && !isPermission) {
             onCallPermission();
 
         }
