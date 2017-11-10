@@ -14,6 +14,8 @@ import org.litepal.LitePalApplication;
 public class MyApp extends LitePalApplication {
     private String appFilePath;
 
+
+
     @Override
     public void onCreate() {
         super.onCreate();

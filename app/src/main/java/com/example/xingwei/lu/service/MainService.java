@@ -296,6 +296,7 @@ public class MainService extends Service {
             } else {
                 toastUtil.showToast(getString(R.string.no_start));
             }
+
         }
 
         private void sendInfoToActivity(int viewId) {
@@ -313,6 +314,7 @@ public class MainService extends Service {
 
 
         private void startCapture() {
+
             strDate = dateFormat.format(new java.util.Date());
             pathImage = path + "/Pictures/";
             nameImage = pathImage + "pic" + strDate + ".png";
@@ -337,6 +339,7 @@ public class MainService extends Service {
                 // 保存或者显示...
                 saveBitmap(mBitmap);
             }
+
         }
 
         private void saveBitmap(Bitmap mBitmap) {

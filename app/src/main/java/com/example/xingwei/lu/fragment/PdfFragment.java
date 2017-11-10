@@ -54,11 +54,8 @@ public class PdfFragment extends BaseFragment {
         getActivity().startService(intent);
         rvPdf.setLayoutManager(new LinearLayoutManager(getActivity()));
         pdfModules = DataSupport.findAll(PdfModule.class);
-
-            pdfAdapter = new PdfAdapter(pdfModules, getActivity());
-            rvPdf.setAdapter(pdfAdapter);
-
-
+        pdfAdapter = new PdfAdapter(pdfModules, getActivity());
+        rvPdf.setAdapter(pdfAdapter);
 
     }
 
@@ -78,13 +75,7 @@ public class PdfFragment extends BaseFragment {
         super.updateData(type);
         if (type.equals("pdf")) ;
         {
-            Log.d("Zw", "update pdfUI");
-            // TODO: 2017/11/8 更新pdfUI操作
             pdfModules = DataSupport.findAll(PdfModule.class);
-            if (pdfModules.size() == 0) {
-                showToast("暂无pdf文件");
-                return;
-            }
             pdfAdapter.setData(pdfModules);
         }
     }
