@@ -18,6 +18,7 @@ import com.example.xingwei.lu.util.FileUtil;
 public class FileServer extends Service {
     private MyApp myApp;
     Thread thread;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -27,6 +28,7 @@ public class FileServer extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        myApp = (MyApp) getApplication();
         thread = new Thread() {
             public void run() {
                 super.run();
@@ -40,5 +42,7 @@ public class FileServer extends Service {
             }
         };
         thread.start();
+//        myApp.setThread(thread);
     }
+
 }

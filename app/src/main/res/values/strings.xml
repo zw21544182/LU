@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LU</string>
+    <string name="app_name">课程助手</string>
     <string name="title_video">录屏</string>
     <string name="title_image">截屏</string>
     <string name="title_record">摄像</string>

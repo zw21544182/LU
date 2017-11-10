@@ -103,7 +103,7 @@ public class MainService extends Service {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
         // 此处设置的图标仅用于显示新提醒时候出现在设备的通知栏
-        mBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        mBuilder.setSmallIcon(R.drawable.logo);
         notification = mBuilder.build();
         receiver = new ButtonReceiver();
         IntentFilter intentFilter = new IntentFilter();
@@ -282,6 +282,13 @@ public class MainService extends Service {
         }
 
         private void evnnt_stop() {
+//            Thread thread = myApp.getThread();
+//            if (thread != null)
+//                try {
+//                    thread.wait();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
             if (mMediaRecorder != null) {
                 isStop = true;
                 mMediaRecorder.stop();
@@ -296,7 +303,8 @@ public class MainService extends Service {
             } else {
                 toastUtil.showToast(getString(R.string.no_start));
             }
-
+//            if (thread != null)
+//                thread.notify();
         }
 
         private void sendInfoToActivity(int viewId) {
