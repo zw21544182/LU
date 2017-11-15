@@ -9,6 +9,8 @@ import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -43,6 +45,15 @@ public class PhotographActivity extends Activity implements View.OnClickListener
     private String path = Environment.getExternalStorageDirectory().getPath() + "/LU/Movie";
     private boolean isStart = false;
     private int requestcode;
+    private Handler handler
+            = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            initCamera();
+            initView();
+        }
+    };
 
     @Override
     protected void onDestroy() {
@@ -83,8 +94,17 @@ public class PhotographActivity extends Activity implements View.OnClickListener
         if (requestCode == requestcode) {
             if (permissions[0].equals(Manifest.permission.CAMERA) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.d("zw", "permision suxes");
-                initCamera();
-                initView();
+                new Thread() {
+                    public void run() {
+                        super.run();
+                        try {
+                            Thread.sleep(1000);
+                            handler.sendEmptyMessage(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }.start();
             }
         }
     }

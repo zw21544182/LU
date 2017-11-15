@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
             //请求权限
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
         } else {//已经授权了就走这条分支
             if (viedeoFragment != null) {
                 viedeoFragment.initData(null);
@@ -273,6 +273,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 toastUtil.showToast(getString(R.string.permiss_false));
                 finish();
             }
+        } else if (requestCode == 2) {
+            if (requestCode == 1) {
+                if (permissions[0].equals(Manifest.permission.CAMERA) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(this, PhotographActivity.class);
+                    startActivity(intent);
+                } else {//没有获得到权限
+                    toastUtil.showToast(getString(R.string.permiss_false));
+                }
+            }
         }
 
     }
@@ -295,8 +304,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         showPopupWindow(findViewById(R.id.content));
                     }
                 } else {
-                    Intent intent = new Intent(this, PhotographActivity.class);
-                    startActivity(intent);
+                    if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ?
+                            true : false) {
+                        Intent intent = new Intent(this, PhotographActivity.class);
+                        startActivity(intent);
+                    } else {
+                        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.CAMERA}, 2);
+
+                    }
                 }
                 break;
         }
@@ -353,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onWindowFocusChanged(hasFocus);
         isPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ?
                 true : false;
-        if (isPermission) {
+        if (isPermission && hasFocus) {
             startIntent();
         }
         if (hasFocus && !isPermission) {
