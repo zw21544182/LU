@@ -59,7 +59,15 @@
                 android:resource="@xml/rob_service_config" />
         </service>
         <service android:name=".service.FileServer" />
-        <service android:name=".service.FileServer" />
+        <service
+            android:name=".service.MyService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.xingwei.lu.MyService" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
 
 
     </application>

@@ -76,7 +76,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
             }
         });
-        videoViewHolder.tvFileName.setText(data.get(position).getFileName());
+//        if (data.get(position).getFileName() != null)
+//            videoViewHolder.tvFileName.setText(data.get(position).getFileName() + "");
         videoViewHolder.tvTime.setText(data.get(position).getTime() + "      " +
                 data.get(position).getDuration());
         Glide.with(context).load(data.get(position).getPath()).into(videoViewHolder.image);
@@ -162,7 +163,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             ibShare = (ImageButton) view.findViewById(R.id.ibShare);
             chose = (CheckBox) view.findViewById(R.id.chose);
             chose.setVisibility(View.INVISIBLE);
-            last =  view.findViewById(R.id.last);
+            last = view.findViewById(R.id.last);
             last.setVisibility(View.INVISIBLE);
         }
 

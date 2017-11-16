@@ -1,9 +1,9 @@
-// Camera.aidl
+// Window.aidl
 package com.example.xingwei.lu;
 
 // Declare any non-default types here with import statements
 
-interface MyCamera {
+interface Window {
     /**
      * Demonstrates some basic types that you can use as parameters
      * and return values in AIDL.

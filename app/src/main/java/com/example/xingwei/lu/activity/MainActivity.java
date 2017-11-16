@@ -215,7 +215,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d("xwl", "startIntent");
         if (intent != null && result != 0) {
             Log.d("xwl", "ssssssss");
-
             ((MyApp) getApplication()).setResultCode(result);
             ((MyApp) getApplication()).setResultIntent(intent);
             serviceIntent = new Intent(getApplicationContext(), MainService.class);
@@ -274,14 +273,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 finish();
             }
         } else if (requestCode == 2) {
-            if (requestCode == 1) {
+
                 if (permissions[0].equals(Manifest.permission.CAMERA) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Intent intent = new Intent(this, PhotographActivity.class);
                     startActivity(intent);
                 } else {//没有获得到权限
                     toastUtil.showToast(getString(R.string.permiss_false));
                 }
-            }
+
         }
 
     }
@@ -304,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         showPopupWindow(findViewById(R.id.content));
                     }
                 } else {
-                    if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ?
+                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED ?
                             true : false) {
                         Intent intent = new Intent(this, PhotographActivity.class);
                         startActivity(intent);

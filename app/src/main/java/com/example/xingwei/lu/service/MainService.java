@@ -176,14 +176,15 @@ public class MainService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        flags = START_STICKY;
-        return super.onStartCommand(intent, flags, startId);
+
+        return super.onStartCommand(intent, START_STICKY, startId);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Log.d("xwl", "service destory");
+        unregisterReceiver(receiver);
         notificationManager.cancel(NOTIFICATION_ID);
 
     }
@@ -250,8 +251,11 @@ public class MainService extends Service {
                 remoteView.setImageViewResource(R.id.ivStart, R.drawable.start);
                 isStart = false;
             } else {
+
                 if (isStop) {
                     //停止状态
+                    toastUtil.showToast("开始录屏");
+
                     videoFile = new File(path + "/Video", dateFormat.format(new Date()) + ".mp4");
                     Log.d("xwl", "path " + videoFile.getAbsolutePath());
                     if (!videoFile.exists()) {
