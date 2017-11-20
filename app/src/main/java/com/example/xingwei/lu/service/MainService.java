@@ -174,18 +174,13 @@ public class MainService extends Service {
         virtualDisplay();
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
-        return super.onStartCommand(intent, START_STICKY, startId);
-    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Log.d("xwl", "service destory");
-        unregisterReceiver(receiver);
-        notificationManager.cancel(NOTIFICATION_ID);
+            unregisterReceiver(receiver);
+            notificationManager.cancel(NOTIFICATION_ID);
 
     }
 
@@ -355,7 +350,6 @@ public class MainService extends Service {
         }
 
         private void saveBitmap(Bitmap mBitmap) {
-
             try {
                 Log.d("xwl", "src " + nameImage);
                 File fileImage = new File(nameImage);
@@ -378,15 +372,6 @@ public class MainService extends Service {
 
                 toastUtil.showToast("读写异常");
             }
-        }
-
-        private void stopVirtual() {
-            if (mVirtualDisplay == null) {
-                return;
-            }
-            mVirtualDisplay.release();
-            mVirtualDisplay = null;
-            Log.i(TAG, "virtual display stopped");
         }
 
         private MediaRecorder createMediaRecorder(File file) {

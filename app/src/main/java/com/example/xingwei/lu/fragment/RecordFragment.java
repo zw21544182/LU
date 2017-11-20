@@ -154,4 +154,7 @@ public class RecordFragment extends BaseFragment {
     public void click(View view) {
 
     }
+
+    public RecordFragment() {
+    }
 }

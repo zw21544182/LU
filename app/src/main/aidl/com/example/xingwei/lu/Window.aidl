@@ -9,4 +9,6 @@ interface Window {
      * and return values in AIDL.
      */
     void initData();
+    void createVirtualEnvironment();
+    void stopService();
 }

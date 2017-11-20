@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -34,7 +35,6 @@ import com.example.xingwei.lu.fragment.PdfFragment;
 import com.example.xingwei.lu.fragment.RecordFragment;
 import com.example.xingwei.lu.fragment.SetFragment;
 import com.example.xingwei.lu.fragment.ViedeoFragment;
-import com.example.xingwei.lu.service.MainService;
 import com.example.xingwei.lu.util.ToastUtil;
 
 import java.io.File;
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private PopupWindow popupWindow;
     private boolean isExit;
     private boolean isPermission;
-    private Intent serviceIntent;
+    private boolean isInitData = false;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -119,17 +119,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     };
+    private MyApp myApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("xwl", "oncreate");
         setContentView(R.layout.activity_main);
-
         initView();
         initData();
         event();
-
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -162,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initData() {
         toastUtil = ToastUtil.getInstance(this);
         mMediaProjectionManager = (MediaProjectionManager) getApplication().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-
+        myApp = (MyApp) getApplication();
     }
 
     private void event() {
@@ -183,25 +182,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    public void onCallPermission() {
-        if ((checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-            //第一次请求权限的时候返回false,第二次shouldShowRequestPermissionRationale返回true
-            //如果用户选择了“不再提醒”永远返回false。
-            if (shouldShowRequestPermissionRationale(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-            }
-            //请求权限
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
-        } else {//已经授权了就走这条分支
-            if (viedeoFragment != null) {
-                viedeoFragment.initData(null);
-            }
-            createRootPath();
-            startIntent();
-        }
-
-    }
-
     private void createRootPath() {
         File file = new File(Environment.getExternalStorageDirectory().getPath(), "LU");
         if (!file.exists()) {
@@ -217,8 +197,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.d("xwl", "ssssssss");
             ((MyApp) getApplication()).setResultCode(result);
             ((MyApp) getApplication()).setResultIntent(intent);
-            serviceIntent = new Intent(getApplicationContext(), MainService.class);
-            startService(serviceIntent);
+            try {
+                myApp.getWindow().createVirtualEnvironment();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         } else {
             Log.d("zw", "intent null");
             Log.d("zw", "ssssssss");
@@ -274,12 +257,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else if (requestCode == 2) {
 
-                if (permissions[0].equals(Manifest.permission.CAMERA) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Intent intent = new Intent(this, PhotographActivity.class);
-                    startActivity(intent);
-                } else {//没有获得到权限
-                    toastUtil.showToast(getString(R.string.permiss_false));
-                }
+            if (permissions[0].equals(Manifest.permission.CAMERA) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(this, PhotographActivity.class);
+                startActivity(intent);
+            } else {//没有获得到权限
+                toastUtil.showToast(getString(R.string.permiss_false));
+            }
 
         }
 
@@ -367,11 +350,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onWindowFocusChanged(hasFocus);
         isPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ?
                 true : false;
-        if (isPermission && hasFocus) {
+        if (isPermission && hasFocus && !isInitData) {
+            if (viedeoFragment != null) {
+                viedeoFragment.initData(null);
+            }
+            createRootPath();
             startIntent();
+            isInitData = true;
         }
         if (hasFocus && !isPermission) {
-            onCallPermission();
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
 
         }
     }
@@ -422,8 +410,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("xwl", "activity destroy");
-        stopService(serviceIntent);
+        try {
+            myApp.getWindow().stopService();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
 }

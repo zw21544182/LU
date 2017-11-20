@@ -21,16 +21,16 @@ import org.litepal.LitePalApplication;
 
 public class MyApp extends LitePalApplication {
     private String appFilePath;
-    private Thread thread;
     private Window window;
 
-    public Thread getThread() {
-        return thread;
+    public Window getWindow() {
+        return window;
     }
 
-    public void setThread(Thread thread) {
-        this.thread = thread;
+    public void setWindow(Window window) {
+        this.window = window;
     }
+
 
     @Override
     public void onCreate() {

@@ -68,7 +68,7 @@ public class SetFragment extends BaseFragment {
                     SharedPreferencesUtil.setParam(getActivity(), "headimage", imagePath);
                     imageView.setImageURI(imageUri);
                 } else {
-                    showToast("获取头像失败");
+                    setImage();
                 }
                 break;
         }
@@ -94,7 +94,15 @@ public class SetFragment extends BaseFragment {
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         toastUtil = ToastUtil.getInstance(getActivity());
+        setImage();
+    }
+
+    private void setImage() {
         headImagePath = (String) SharedPreferencesUtil.getParam(getActivity(), "headimage", "");
+        if (headImagePath.trim().equals("")) {
+            imageView.setImageResource(R.drawable.head);
+            return;
+        }
         imageView.setImageURI(Uri.parse(headImagePath));
     }
 
