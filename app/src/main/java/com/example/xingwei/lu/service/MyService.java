@@ -76,7 +76,6 @@ public class MyService extends Service {
     private String strDate;
     private String pathImage;
     private String nameImage;
-    private MediaProjectionManager mMediaProjectionManager1;
     private WindowManager mWindowManager1;
     private DisplayMetrics metrics;
     private int mScreenDensity;

@@ -45,7 +45,6 @@
         </activity>
         <activity android:name=".activity.PdfActivity" />
 
-        <service android:name=".service.MainService" />
         <service
             android:name=".service.TestService"
             android:enabled="true"
