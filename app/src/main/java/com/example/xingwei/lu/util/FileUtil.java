@@ -21,7 +21,7 @@ import static android.os.Environment.getExternalStorageDirectory;
 /**
  * 创建时间: 2017/10/18
  * 创建人: Administrator
- * 功能描述:
+ * 功能描述:文件工具类
  */
 
 public class FileUtil {
@@ -43,27 +43,30 @@ public class FileUtil {
 
     public void getVideoInfoByPath(String path, final Handler handler) {
         if (videoModerns == null) {
-            videoModerns = new ArrayList<>();
+            //如果videModerns为空
+            videoModerns = new ArrayList<>();//新建集合
         }
-        videoModerns.clear();
-        File file = new File(path);
+        videoModerns.clear();//清除集合中所有的元素
+        File file = new File(path);//通过路径新建一个文件对象
 
-        if (!file.exists()) {
-            return;
+        if (!file.exists()) {//如果文件不存在
+            return;//返回
         }
-        final File[] videoFiles = file.listFiles();
-        if (videoFiles == null) {
-            handler.sendEmptyMessage(0);
-            return;
+        final File[] videoFiles = file.listFiles();//获取file文件夹下所有的子文件
+        if (videoFiles == null) {//如果viddeoFiles为空
+            handler.sendEmptyMessage(0);//发送通知
+            return;//返回
         }
-        if (videoFiles.length == 0) {
-            handler.sendEmptyMessage(0);
-            return;
+        if (videoFiles.length == 0) {//如果videoFiles的长度为0
+            handler.sendEmptyMessage(0);//发送通知
+            return;//返回
         }
         new Thread() {
             @Override
             public void run() {
+                //子线程
                 super.run();
+                //遍历文件
                 for (File videoFile : videoFiles
                         ) {
                     Message message = new Message();
@@ -162,6 +165,11 @@ public class FileUtil {
         return duration;
     }
 
+    /**
+     * 涉及到大量文件操作务必放在子线程中执行
+     *
+     * @param strPath 根文件路径
+     */
     public void checkPdf(String strPath) {
         PdfModule pdfModule = new PdfModule();
         File dir = new File(strPath);
