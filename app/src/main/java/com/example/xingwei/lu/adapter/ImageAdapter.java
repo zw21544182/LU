@@ -120,10 +120,22 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     }
 
     public interface ImageViewClick {
+        /**
+         * 显示图片时要执行的代码
+         * @param path 文件路径
+         */
         void showImage(String path);
 
+        /**
+         * 重命名时要执行的代码
+         * @param path 文件路径
+         */
         void rename(String path);
 
+        /**
+         * 分享时要执行的代码
+         * @param path  文件路径
+         */
         void share(String path);
     }
 

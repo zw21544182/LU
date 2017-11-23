@@ -40,15 +40,16 @@ public class ImageFragment extends BaseFragment {
 
     @Override
     public View initView(LayoutInflater inflater) {
-        imageView = inflater.inflate(R.layout.fragment_image, null);
-        initFindViewById(imageView);
+        //子界面初始化方法
+        imageView = inflater.inflate(R.layout.fragment_image, null);//初始化界面
+        initFindViewById(imageView);//绑定View
         return imageView;
     }
 
     @Override
     public void initFindViewById(View view) {
-        tvImagePath = (TextView) view.findViewById(R.id.tvImagePath);
-        rvImage = (RecyclerView) view.findViewById(R.id.rvImage);
+        tvImagePath = (TextView) view.findViewById(R.id.tvImagePath);//绑定tvImagePath
+        rvImage = (RecyclerView) view.findViewById(R.id.rvImage);//绑定rvImage
         imagePath = "LU" + "/Pictures";
         Log.d("xwl", "initData " + imagePath);
         tvImagePath.setText(imagePath);
@@ -57,15 +58,20 @@ public class ImageFragment extends BaseFragment {
     @Override
     protected void initEvent() {
         super.initEvent();
-        tvImagePath.setOnClickListener(this);
+        tvImagePath.setOnClickListener(this);//设置点击事件（在onclick中查看）
     }
 
     @Override
     public void changState() {
-        boolean isChose = !MainActivity.fragmentstate;
-        imageAdapter.setShow(isChose);
+        boolean isChose = !MainActivity.fragmentstate;//从MainActivity中获取fragmentState的值
+        imageAdapter.setShow(isChose);//改变rvImage中展示的内容
     }
 
+    /**
+     * 返回选中的条目文件路径
+     *
+     * @return 为List集合
+     */
     @Override
     public List<String> getDeletePaths() {
         return imageAdapter.getDeletePaths();
@@ -80,29 +86,34 @@ public class ImageFragment extends BaseFragment {
         }
     }
 
+    /**
+     * 进入图片文件夹
+     */
     private void enterImagePath() {
-
+// TODO: 2017/11/23 进入图片文件夹
     }
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        rvImage.setLayoutManager(new LinearLayoutManager(getActivity()));
-        List<ImageModern> imageModerns = new FileUtil().getImageInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Pictures");
+        rvImage.setLayoutManager(new LinearLayoutManager(getActivity()));//设置rvImage显示时的布局参数
+        List<ImageModern> imageModerns = new FileUtil().getImageInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Pictures");//从文件工具类中获取集合
+        //新建一个适配器
         imageAdapter = new ImageAdapter(imageModerns, getActivity(), new ImageAdapter.ImageViewClick() {
+
             @Override
             public void showImage(String path) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                String type = "image/png";
-                Uri uri = Uri.parse(path);
+                String type = "image/png";//指定类型
+                Uri uri = Uri.parse(path);//指定路径
                 intent.setDataAndType(uri, type);
-                startActivity(intent);
+                startActivity(intent);//打开新的activity查看图片（系统自带activty）
             }
 
             @Override
             public void rename(final String path) {
                 Log.d("XWL", "FILE PATH" + path);
-                final File file = new File(path);
-                String oldName = file.getName().substring(0, file.getName().length() - 4);
+                final File file = new File(path);//新建file对象
+                String oldName = file.getName().substring(0, file.getName().length() - 4);//去掉后缀名
                 renameDialog = new RenameDialog(getActivity(), R.layout.dialog_rename, new int[]{R.id.llnegative, R.id.llpostive});
                 renameDialog.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -111,30 +122,30 @@ public class ImageFragment extends BaseFragment {
                             case R.id.llpostive:
                                 String newName = renameDialog.getRenameString();
                                 if (new FileUtil().isRename(newName, FileUtil.IMAGE)) {
-                                    showToast("已存在相同文件名");
+                                    //判断是否重名
+                                    showToast("已存在相同文件名");//显示对话框
                                 } else {
                                     Log.d("xwl", "old name " + file.getAbsolutePath());
-                                    file.renameTo(new File(file.getParent() + "/" + newName + ".png"));
-
-                                    showToast("更新");
+                                    file.renameTo(new File(file.getParent() + "/" + newName + ".png"));//通过file对象重命名为用户输入的文本
+                                    showToast("更新");//显示对话框
                                     List<ImageModern> imageModerns1 = new FileUtil().getImageInfoByPath(
                                             Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Pictures"
-                                    );
-                                    imageAdapter.setData(imageModerns1);
-                                    renameDialog.dismiss();
+                                    );//获取新的文件集合
+                                    imageAdapter.setData(imageModerns1);//将集合设置进适配器
+                                    renameDialog.dismiss();//让重命名对话框消失
 
                                 }
 
                                 break;
                             case R.id.llnegative:
-                                renameDialog.dismiss();
+                                renameDialog.dismiss();//让重命名对话框消失
                                 break;
 
                         }
                     }
                 });
-                renameDialog.show();
-                renameDialog.setRenameString(oldName);
+                renameDialog.show();//展示重命名对话框
+                renameDialog.setRenameString(oldName);//将文件名加载至对话框
             }
 
             @Override
@@ -149,7 +160,7 @@ public class ImageFragment extends BaseFragment {
                 getActivity().startActivity(intent);
             }
         });
-        rvImage.setAdapter(imageAdapter);
+        rvImage.setAdapter(imageAdapter);//将适配器与rvImage绑定
 
     }
 
@@ -157,6 +168,7 @@ public class ImageFragment extends BaseFragment {
     @Override
     protected void updateData(String type) {
         super.updateData(type);
+        //绑定数据
         if (type.equals("image")) {
             List<ImageModern> videoModerns = new FileUtil().getImageInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Pictures");
             Log.d("xwl", "image data size " + videoModerns.size());
