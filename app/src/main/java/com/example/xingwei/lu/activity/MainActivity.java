@@ -40,8 +40,6 @@ import com.example.xingwei.lu.util.ToastUtil;
 import java.io.File;
 import java.util.List;
 
-//给做的邢伟璐的毕业设计
-//ceshle
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private ToastUtil toastUtil;
     private int result = 0;
@@ -71,28 +69,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            isRecord = false;
+            isRecord = false;//指定是不是摄像子界面
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-
-                    btChose.setVisibility(View.VISIBLE);
-                    btChose.setText("选择");
-
-                    tvTitle.setText("录屏");
-                    if (viedeoFragment == null)
-                        viedeoFragment = new ViedeoFragment();
-                    switchFragment(viedeoFragment);
+                    //点击录像时运行的代码
+                    btChose.setVisibility(View.VISIBLE);//将选择按钮设为可见
+                    btChose.setText("选择");//设置选择按钮上的文字为"选择"
+                    tvTitle.setText("录屏");//设置TextView标题为"录屏"
+                    if (viedeoFragment == null)//判断viedeoFragment是否为空
+                        viedeoFragment = new ViedeoFragment();//如果为空则创建
+                    switchFragment(viedeoFragment);//将viedeoFragment子界面加载到主界面上
                     return true;
                 case R.id.navigation_dashboard:
-                    btChose.setVisibility(View.VISIBLE);
-                    btChose.setText("选择");
-                    tvTitle.setText("截图");
-                    if (imageFragment == null)
-                        imageFragment = new ImageFragment();
-                    switchFragment(imageFragment);
+                    //点击截图时运行的代码
+                    btChose.setVisibility(View.VISIBLE);//将选择按钮设为可见
+                    btChose.setText("选择");//设置选择按钮上的文字为"选择"
+                    tvTitle.setText("截图");//设置TextView标题为"截图"
+                    if (imageFragment == null)//判断imageFragment是否为空
+                        imageFragment = new ImageFragment();//如果为空则创建
+                    switchFragment(imageFragment);//将imageFragment子界面加载到主界面上
                     return true;
                 case R.id.navigation_record:
-                    isRecord = true;
+                    //点击摄像时会运行的代码
+                    isRecord = true;//指定是摄像界面（用来判断按钮btChose的点击事件）
                     btChose.setVisibility(View.VISIBLE);
                     btChose.setText("开始");
                     tvTitle.setText("录像");
@@ -101,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     switchFragment(recordFragment);
                     return true;
                 case R.id.navigation_notifications:
+                    //点击设置时会运行的代码
                     btChose.setVisibility(View.INVISIBLE);
                     tvTitle.setText("设置");
                     if (setFragment == null)
@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     switchFragment(setFragment);
                     return true;
                 case R.id.navigation_pdf:
+                    //点击课件时会运行的代码
                     tvTitle.setText("课件");
                     if (pdfFragment == null)
                         pdfFragment = new PdfFragment();
@@ -122,34 +123,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     };
     private MyApp myApp;
 
+    /**
+     * 界面初始化时调用的方法
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("xwl", "oncreate");
-        setContentView(R.layout.activity_main);
-        initView();
-        initData();
-        event();
+        setContentView(R.layout.activity_main);//加载界面
+        initView();//初始化view方法（按ctrl,用鼠标点它可以进入该方法）
+        initData();//初始化数据（同上）
+        event();//初始化按钮点击事件（就是你点了那个按钮后指定系统要运行什么代码）
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case DELETESUCESS:
-                        ToastUtil.getInstance(MainActivity.this).showToast("删除成功");
-                        mCurrentFrgment.changState();
-                        fragmentstate = false;
-                        btChose.setText("选择");
-                        popupWindow.dismiss();
+                        ToastUtil.getInstance(MainActivity.this).showToast("删除成功");//显示对话框
+                        mCurrentFrgment.changState();//子界面更新
+                        fragmentstate = false;//更新状态值
+                        btChose.setText("选择");//设置选择按钮的文字为（选择）
+                        popupWindow.dismiss();//让popupWindow消失
                         Intent intent = new Intent();
                         intent.setAction("com.audioeadd");
-                        if (mCurrentFrgment instanceof ViedeoFragment) {
-                            intent.putExtra("type", "video");
+                        if (mCurrentFrgment instanceof ViedeoFragment) {//判断是否为录像界面
+                            intent.putExtra("type", "video");//设置类型为video
                         } else {
-                            intent.putExtra("type", "image");
+                            intent.putExtra("type", "image");//设置类型为image,用于区分子界面更新
                         }
 
-                        sendBroadcast(intent);
+                        sendBroadcast(intent);//发送广播通知更新子条目(还有多少条记录)
                         break;
                     case 0:
                         isExit = false;
@@ -160,33 +166,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initData() {
-        toastUtil = ToastUtil.getInstance(this);
-        mMediaProjectionManager = (MediaProjectionManager) getApplication().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-        myApp = (MyApp) getApplication();
+        toastUtil = ToastUtil.getInstance(this);//初始化对话框对象
+        mMediaProjectionManager = (MediaProjectionManager) getApplication().getSystemService(Context.MEDIA_PROJECTION_SERVICE);//获取mMediaProjectionManager，用于录屏截图
+        myApp = (MyApp) getApplication();//获取Application(保存全局变量，软件打开后，所有的界面都可以拿到的变量)
     }
 
     private void event() {
-        btChose.setOnClickListener(this);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        navigation.setSelectedItemId(R.id.navigation_home);
+        btChose.setOnClickListener(this);//给选择按钮设置点击事件（ctrl+F输入onClick然后蓝色下键头找到onClick方法 switch  在R.id.btchose下为它要运行的代码）
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);//给屏幕下方的导航栏设置子条目点击事件（ctrl+鼠标左键mOnNavigationItemSelectedListener查看详情）
+        navigation.setSelectedItemId(R.id.navigation_home);//设置下方导航栏选中录像
 
     }
 
     private void initView() {
-        navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);//绑定界面中的导航条
 
         tvTitle = (TextView)
-                findViewById(R.id.tvTitle);
+                findViewById(R.id.tvTitle);//绑定界面中的标题View
 
         btChose = (Button)
-                findViewById(R.id.btChose);
+                findViewById(R.id.btChose);//绑定界面中的选择按钮
     }
 
 
     private void createRootPath() {
-        File file = new File(Environment.getExternalStorageDirectory().getPath(), "LU");
-        if (!file.exists()) {
-            file.mkdir();
+        File file = new File(Environment.getExternalStorageDirectory().getPath(), "LU");//创建file对象
+        if (!file.exists()) {//判断file是否存在
+            file.mkdir();//如果不存在 则新建文件夹
         }
 
 
@@ -269,30 +275,80 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    public void showPopupWindow(View v) {
+        View contentView = LayoutInflater.from(this).inflate(R.layout.popupwindow_chose, null);//设置popupWindowd的布局,ctrl+鼠标左键点击popupwindow_chose可以看到它的布局
+        RelativeLayout rlNeg;
+        RelativeLayout rlPos;
+        rlNeg = (RelativeLayout) contentView.findViewById(R.id.rlNeg);//绑定确定布局
+        rlPos = (RelativeLayout) contentView.findViewById(R.id.rlPos);//绑定取消布局
+
+        if (popupWindow == null) {//如果popWindow为null则新建对象，初始化一些数据（节省资源）
+            popupWindow = new PopupWindow(contentView,
+                    LinearLayout.LayoutParams.MATCH_PARENT, dip2px(this, 50), true);//新建popupWindow对象
+            popupWindow.setTouchable(true);//设置popupWindow可点击
+            popupWindow.setFocusable(false);//设置popupWindow失去焦点
+        }
+        popupWindow.showAsDropDown(v);//设置popupWindow在v的下方显示
+        rlPos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {//设置点击确定时要运行的代码
+                final List<String> deletePaths = mCurrentFrgment.getDeletePaths();
+                ToastUtil.getInstance(MainActivity.this).showToast("后台删除中");//显示对话框
+                new Thread() {
+                    //新建一个线程（代码操作文件时,是耗费时间的操作,如果不在线程中运行的话，会导致卡,相当于分一个人出来做事情）
+                    @Override
+                    public void run() {
+                        super.run();
+                        //开始运行时，跑的代码
+                        for (String path : deletePaths
+                                ) {//遍历要删除的集合 deletePaths
+                            Log.d("xwl", "delete   path " + path);//输出打印语句
+                            File file = new File(path);//新建一个文件对象
+                            file.delete();//通过文件对象删除这个文件
+                        }
+                        handler.sendEmptyMessage(DELETESUCESS);//for循环完成之后，通知运行完成（ctrl+鼠标左键点handler看完成之后要运行什么代码,其中DELESUCESSP用来区分在哪里发的通知）
+                    }
+                }.start();//线程开始运行
+
+            }
+        });
+        rlNeg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {//设置点击取消时要运行的代码
+                mCurrentFrgment.changState();//更新子界面的状态
+                fragmentstate = false;//设置状态值
+                btChose.setText("选择");//设置选择按钮上的文字为"选择"
+                popupWindow.dismiss();//让popupWindow的消失
+            }
+        });
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btChose:
-                if (!isRecord) {
-                    if (fragmentstate) {
-                        mCurrentFrgment.changState();
-                        fragmentstate = false;
-                        btChose.setText("选择");
-                        if (popupWindow != null)
-                            popupWindow.dismiss();
+            case R.id.btChose://点击选择按钮时会运行的代码
+                if (!isRecord) {//如果isRecord不为空,确定不是摄像界面
+                    if (fragmentstate) {//判断子界面的状态
+                        mCurrentFrgment.changState();//改变子界面的状态
+                        fragmentstate = false;//设置状态值
+                        btChose.setText("选择");//将选择按钮的文字设为“选择”
+                        if (popupWindow != null)//如果popupWindow不为空
+                            popupWindow.dismiss();//让popupWindow消失
                     } else {
-                        mCurrentFrgment.changState();
+                        mCurrentFrgment.changState();//改变子界面的状态
                         fragmentstate = true;
                         btChose.setText("取消");
-                        showPopupWindow(findViewById(R.id.content));
+                        showPopupWindow(findViewById(R.id.content));//显示popupWindow 其中R.id.content为指定的布局
                     }
                 } else {
+                    //如果是摄像界面
                     if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED ?
-                            true : false) {
+                            true : false) {//检查是否有拍照权限
                         Intent intent = new Intent(this, PhotographActivity.class);
-                        startActivity(intent);
-                    } else {
-                        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.CAMERA}, 2);
+                        startActivity(intent);//进入拍照界面
+                    } else {//如果没有
+                        requestPermissions(new String[]{Manifest.permission.CAMERA,
+                                Manifest.permission.CAMERA}, 2);//申请拍照权限 回调onRequestPermissionsResult方法
 
                     }
                 }
@@ -300,57 +356,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void showPopupWindow(View v) {
-        View contentView = LayoutInflater.from(this).inflate(R.layout.popupwindow_chose, null);
-        RelativeLayout rlNeg;
-        RelativeLayout rlPos;
-        rlNeg = (RelativeLayout) contentView.findViewById(R.id.rlNeg);
-        rlPos = (RelativeLayout) contentView.findViewById(R.id.rlPos);
-
-        if (popupWindow == null) {
-            popupWindow = new PopupWindow(contentView,
-                    LinearLayout.LayoutParams.MATCH_PARENT, dip2px(this, 50), true);
-            popupWindow.setTouchable(true);
-            popupWindow.setFocusable(false);
-        }
-        popupWindow.showAsDropDown(v);
-        rlPos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final List<String> deletePaths = mCurrentFrgment.getDeletePaths();
-                ToastUtil.getInstance(MainActivity.this).showToast("后台删除中");
-                new Thread() {
-                    @Override
-                    public void run() {
-                        super.run();
-                        for (String path : deletePaths
-                                ) {
-                            Log.d("xwl", "delete   path " + path);
-                            File file = new File(path);
-                            file.delete();
-                        }
-                        handler.sendEmptyMessage(DELETESUCESS);
-                    }
-                }.start();
-
-            }
-        });
-        rlNeg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mCurrentFrgment.changState();
-                fragmentstate = false;
-                btChose.setText("选择");
-                popupWindow.dismiss();
-            }
-        });
-    }
-
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+        //在界面布局加载完成后要运行的代码（解决大黑屏bug）
         isPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ?
-                true : false;
+                true : false;//检查是否有读写权限
         if (isPermission && hasFocus && !isInitData) {
             if (viedeoFragment != null) {
                 viedeoFragment.initData(null);
