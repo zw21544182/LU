@@ -18,6 +18,7 @@ import com.example.xingwei.lu.activity.AboutActivity;
 import com.example.xingwei.lu.base.BaseFragment;
 import com.example.xingwei.lu.util.SharedPreferencesUtil;
 import com.example.xingwei.lu.util.ToastUtil;
+import com.example.xingwei.lu.view.ChooseDialog;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -38,6 +39,7 @@ public class SetFragment extends BaseFragment {
     private ToastUtil toastUtil;
     private String headImagePath;
     private ProgressDialog progressDialog;
+    private ChooseDialog chooseDialog;
 
     @Override
     public void changState() {
@@ -93,6 +95,7 @@ public class SetFragment extends BaseFragment {
         imageView.setOnClickListener(this);
         about.setOnClickListener(this);
         update.setOnClickListener(this);
+        size.setOnClickListener(this);
     }
 
     @Override
@@ -123,7 +126,17 @@ public class SetFragment extends BaseFragment {
             case R.id.update:
                 checkUpdate();
                 break;
+            case R.id.size:
+                showDialog();
+                break;
         }
+    }
+
+    private void showDialog() {
+        if (chooseDialog == null) {
+            chooseDialog = new ChooseDialog(getActivity());
+        }
+        chooseDialog.show();
     }
 
     private void checkUpdate() {
