@@ -9,4 +9,7 @@
     <string name="path">文件路径:</string>
     <string name="pdf">课件</string>
     <string name="accessibility_description">测试</string>
+    <string name="versionInfo">版本:1.0.0 </string>
+    <string name="support">本软件由邢伟璐制作开发</string>
+    <string name="updateInfo">最新版本</string>
 </resources>

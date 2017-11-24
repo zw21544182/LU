@@ -34,8 +34,8 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".activity.SplashActivity"
-            android:screenOrientation="portrait"
             android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,6 +44,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.PdfActivity" />
+        <activity android:name=".activity.AboutActivity" />
 
         <service
             android:name=".service.TestService"
@@ -70,7 +71,15 @@
             </intent-filter>
         </service>
 
-
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.xingwei.lu.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 
 </manifest>

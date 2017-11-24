@@ -2,9 +2,11 @@ package com.example.xingwei.lu.fragment;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -90,7 +92,25 @@ public class ImageFragment extends BaseFragment {
      * 进入图片文件夹
      */
     private void enterImagePath() {
-// TODO: 2017/11/23 进入图片文件夹
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU", "Pictures");
+        if (!file.exists()) {
+            return;
+        }
+
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        //设置intent的data和Type属性。android 7.0以上crash,改用provider
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Uri fileUri = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName() + ".provider", file);//android 7.0以上
+            intent.setDataAndType(fileUri, "*/*");
+            grantUriPermission(getActivity(), fileUri, intent);
+        } else {
+            intent.setDataAndType(/*uri*/Uri.fromFile(file), "*/*");
+        }
+        //跳转
+        startActivity(intent);
+
+
     }
 
     @Override

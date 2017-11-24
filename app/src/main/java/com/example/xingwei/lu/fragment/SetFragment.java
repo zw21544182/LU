@@ -1,5 +1,6 @@
 package com.example.xingwei.lu.fragment;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.example.xingwei.lu.R;
+import com.example.xingwei.lu.activity.AboutActivity;
 import com.example.xingwei.lu.base.BaseFragment;
 import com.example.xingwei.lu.util.SharedPreferencesUtil;
 import com.example.xingwei.lu.util.ToastUtil;
@@ -35,6 +37,7 @@ public class SetFragment extends BaseFragment {
     private LinearLayout weixin;
     private ToastUtil toastUtil;
     private String headImagePath;
+    private ProgressDialog progressDialog;
 
     @Override
     public void changState() {
@@ -88,7 +91,8 @@ public class SetFragment extends BaseFragment {
     protected void initEvent() {
         super.initEvent();
         imageView.setOnClickListener(this);
-
+        about.setOnClickListener(this);
+        update.setOnClickListener(this);
     }
 
     @Override
@@ -113,7 +117,44 @@ public class SetFragment extends BaseFragment {
             case R.id.imageView:
                 openAlbum();
                 break;
+            case R.id.about:
+                enterAbout();
+                break;
+            case R.id.update:
+                checkUpdate();
+                break;
         }
+    }
+
+    private void checkUpdate() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(getActivity());
+
+            progressDialog.setTitle("检测更新中");
+        }
+        progressDialog.show();
+        new Thread() {
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                            toastUtil.showToast(getString(R.string.updateInfo));
+                        }
+                    });
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                super.run();
+            }
+        }.start();
+    }
+
+    private void enterAbout() {
+        Intent intent = new Intent(getActivity(), AboutActivity.class);
+        startActivity(intent);
     }
 
 
