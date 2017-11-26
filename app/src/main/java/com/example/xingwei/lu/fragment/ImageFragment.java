@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.xingwei.lu.R;
+import com.example.xingwei.lu.activity.ImageActivity;
 import com.example.xingwei.lu.activity.MainActivity;
 import com.example.xingwei.lu.adapter.ImageAdapter;
 import com.example.xingwei.lu.base.BaseFragment;
@@ -92,7 +92,7 @@ public class ImageFragment extends BaseFragment {
      * 进入图片文件夹
      */
     private void enterImagePath() {
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU", "Pictures");
+        File file = new File(getActivity().getFilesDir().getAbsolutePath() + "/LU", "Pictures");
         if (!file.exists()) {
             return;
         }
@@ -116,16 +116,15 @@ public class ImageFragment extends BaseFragment {
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         rvImage.setLayoutManager(new LinearLayoutManager(getActivity()));//设置rvImage显示时的布局参数
-        List<ImageModern> imageModerns = new FileUtil().getImageInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Pictures");//从文件工具类中获取集合
+        List<ImageModern> imageModerns = new FileUtil().getImageInfoByPath(getActivity().getFilesDir().getAbsolutePath() + "/Pictures");//从文件工具类中获取集合
         //新建一个适配器
         imageAdapter = new ImageAdapter(imageModerns, getActivity(), new ImageAdapter.ImageViewClick() {
 
             @Override
             public void showImage(String path) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                String type = "image/png";//指定类型
-                Uri uri = Uri.parse(path);//指定路径
-                intent.setDataAndType(uri, type);
+
+                Intent intent = new Intent(getActivity(), ImageActivity.class);
+                intent.putExtra("path", path);
                 startActivity(intent);//打开新的activity查看图片（系统自带activty）
             }
 
@@ -149,7 +148,7 @@ public class ImageFragment extends BaseFragment {
                                     file.renameTo(new File(file.getParent() + "/" + newName + ".png"));//通过file对象重命名为用户输入的文本
                                     showToast("更新");//显示对话框
                                     List<ImageModern> imageModerns1 = new FileUtil().getImageInfoByPath(
-                                            Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Pictures"
+                                            getActivity().getFilesDir().getAbsolutePath() + "/Pictures"
                                     );//获取新的文件集合
                                     imageAdapter.setData(imageModerns1);//将集合设置进适配器
                                     renameDialog.dismiss();//让重命名对话框消失
@@ -190,7 +189,7 @@ public class ImageFragment extends BaseFragment {
         super.updateData(type);
         //绑定数据
         if (type.equals("image")) {
-            List<ImageModern> videoModerns = new FileUtil().getImageInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Pictures");
+            List<ImageModern> videoModerns = new FileUtil().getImageInfoByPath(getActivity().getFilesDir().getAbsolutePath() + "/Pictures");
             Log.d("xwl", "image data size " + videoModerns.size());
             imageAdapter.setData(videoModerns);
         }

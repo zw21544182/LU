@@ -17,7 +17,6 @@ import android.media.MediaRecorder;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -87,9 +86,11 @@ public class MyService extends Service {
     private final Window.Stub stub = new Window.Stub() {
         @Override
         public void initData() throws RemoteException {
+            Log.d("xwls", "initData");
             myApp = (MyApp) getApplication();
             handler = new Handler();
             toastUtil = ToastUtil.getInstance(MyService.this);
+            path = getFilesDir().getAbsolutePath();
             mediaProjectionManager = (MediaProjectionManager) getSystemService(MEDIA_PROJECTION_SERVICE);
             dateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
             sendNotify();
@@ -97,8 +98,7 @@ public class MyService extends Service {
 
         @Override
         public void createVirtualEnvironment() throws RemoteException {
-            path = Environment.getExternalStorageDirectory().getPath() + "/LU";
-            File file = new File(path, "Video");
+            File file = new File(getFilesDir(), "Video");
             if (!file.exists()) {
                 file.mkdir();
             }
@@ -387,6 +387,7 @@ public class MyService extends Service {
         remoteView.setOnClickPendingIntent(R.id.ivStop, bteEvent(R.id.ivStop));
         notification.contentView = remoteView;
         notification.flags = Notification.FLAG_NO_CLEAR;
+        Log.d("xwls", "notify");
         notificationManager.notify(NOTIFICATION_ID, notification);
     }
 

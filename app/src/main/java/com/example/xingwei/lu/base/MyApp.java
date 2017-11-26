@@ -35,6 +35,7 @@ public class MyApp extends LitePalApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d("xwls", "application oncreate");
         appFilePath = getFilesDir().getAbsolutePath();
         Intent intent = new Intent();
         intent.setAction("com.example.xingwei.lu.MyService");

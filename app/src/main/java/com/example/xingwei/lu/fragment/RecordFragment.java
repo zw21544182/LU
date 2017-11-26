@@ -2,11 +2,13 @@ package com.example.xingwei.lu.fragment;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -43,9 +45,9 @@ public class RecordFragment extends BaseFragment {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what != 0) {
-                VideoModern videoModern = (VideoModern) msg.obj;
+                videomoderns = (List<VideoModern>) msg.obj;
                 if (videomoderns != null) {
-                    videomoderns.add(videoModern);
+
                     videoAdapter.setData(videomoderns);
                 }
             }
@@ -90,10 +92,26 @@ public class RecordFragment extends BaseFragment {
         videoAdapter = new VideoAdapter(videomoderns, getActivity(), new VideoAdapter.ViewClick() {
             @Override
             public void playVideo(String path) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                String type = "*/*";
-                Uri uri = Uri.parse(path);
-                intent.setDataAndType(uri, type);
+                File file = new File(RecordFragment.this.path, path);
+                if (!file.exists()) {
+                    showToast(getString(R.string.no_video));
+                    return;
+                }
+                openFile(file);
+            }
+
+            private void openFile(File f) {
+                Intent intent = new Intent();
+                intent.setAction(android.content.Intent.ACTION_VIEW);
+                String type = "video/*";
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Uri u = FileProvider.getUriForFile(getActivity(), getActivity().getApplicationContext().getPackageName() + ".provider", f);
+                    intent.setDataAndType(u, type);
+                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                } else {
+
+                    intent.setDataAndType(Uri.fromFile(f), type);
+                }
                 startActivity(intent);
             }
 

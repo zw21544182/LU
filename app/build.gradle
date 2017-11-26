@@ -7,7 +7,7 @@ android {
     buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.example.xingwei.lu"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -38,5 +38,6 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'com.github.barteksc:android-pdf-viewer:2.7.0'
     compile 'org.litepal.android:core:1.5.1'
+    compile 'li.camera:CamearHelp:1.0.1'
 }
 

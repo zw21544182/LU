@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
@@ -39,6 +38,8 @@ import com.example.xingwei.lu.util.ToastUtil;
 
 import java.io.File;
 import java.util.List;
+
+import li.camera.CameraActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private ToastUtil toastUtil;
@@ -95,8 +96,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     btChose.setVisibility(View.VISIBLE);
                     btChose.setText("开始");
                     tvTitle.setText("录像");
-                    if (recordFragment == null)
-                        recordFragment = new RecordFragment(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Movie");
+                    if (recordFragment == null) {
+                        File file = new File(getFilesDir(), "Movie");
+                        if (!file.exists())
+                            file.mkdir();
+                        recordFragment = new RecordFragment(file.getAbsolutePath());
+                    }
                     switchFragment(recordFragment);
                     return true;
                 case R.id.navigation_notifications:
@@ -189,15 +194,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void createRootPath() {
-        File file = new File(Environment.getExternalStorageDirectory().getPath(), "LU");//创建file对象
-        if (!file.exists()) {//判断file是否存在
-            file.mkdir();//如果不存在 则新建文件夹
-        }
-
-
-    }
-
     private void startIntent() {
         Log.d("xwl", "startIntent");
         if (intent != null && result != 0) {
@@ -256,7 +252,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (viedeoFragment != null) {
                     viedeoFragment.initData(null);
                 }
-                createRootPath();
                 startIntent();
             } else {//没有获得到权限
                 toastUtil.showToast(getString(R.string.permiss_false));
@@ -344,8 +339,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     //如果是摄像界面
                     if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED ?
                             true : false) {//检查是否有拍照权限
-                        Intent intent = new Intent(this, PhotographActivity.class);
-                        startActivity(intent);//进入拍照界面
+                        CameraActivity.enterCamera(this);//高逼格 哈哈哈
                     } else {//如果没有
                         requestPermissions(new String[]{Manifest.permission.CAMERA,
                                 Manifest.permission.CAMERA}, 2);//申请拍照权限 回调onRequestPermissionsResult方法
@@ -366,7 +360,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (viedeoFragment != null) {
                 viedeoFragment.initData(null);
             }
-            createRootPath();
             startIntent();
             isInitData = true;
         }
@@ -415,7 +408,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // 利用handler延迟发送更改状态信息
             handler.sendEmptyMessageDelayed(0, 2000);
         } else {
-            finish();
+            try {
+
+                myApp.getWindow().stopService();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+//            finish();
+            System.exit(0);
         }
     }
 

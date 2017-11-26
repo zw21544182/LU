@@ -2,11 +2,12 @@ package com.example.xingwei.lu.fragment;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -47,9 +48,8 @@ public class ViedeoFragment extends BaseFragment {
                     videoAdapter.setData(videomoderns);
                     break;
                 case 1:
-                    VideoModern videoModern = (VideoModern) msg.obj;
+                    videomoderns = (List<VideoModern>) msg.obj;
                     if (videomoderns != null) {
-                        videomoderns.add(videoModern);
                         videoAdapter.setData(videomoderns);
                     }
                     break;
@@ -87,10 +87,44 @@ public class ViedeoFragment extends BaseFragment {
         videoAdapter = new VideoAdapter(videomoderns, getActivity(), new VideoAdapter.ViewClick() {
             @Override
             public void playVideo(String path) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                String type = "*/*";
-                Uri uri = Uri.parse(path);
-                intent.setDataAndType(uri, type);
+                File file = new File(getActivity().getFilesDir().getAbsolutePath() + "/Video", path);
+                if (!file.exists()) {
+                    showToast(getString(R.string.no_video));
+                    return;
+                }
+                openFile(file);
+//                Intent intent = new Intent(Intent.ACTION_VIEW);
+//                File file = new File(getActivity().getFilesDir() + "/Video", path);
+//                if (!file.exists()) {
+//                    showToast(getString(R.string.no_video));
+//                    return;
+//                }
+//                Uri contentUri = Uri.parse(file.getAbsolutePath());
+//                Log.d("xwls", "playVideo");
+//                if (Build.VERSION.SDK_INT >= 24) {
+//                    Log.d("xwls", "api 24");
+//
+//                    File imagePath = new File(getActivity().getFilesDir(), "Video");
+//                    File newFile = new File(imagePath, path);
+//                    contentUri = FileProvider.getUriForFile(getContext(), "com.example.xingwei.lu.provider", newFile);
+//                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//
+//                }
+//                intent.setDataAndType(contentUri, "video/*");
+//                startActivity(intent);
+            }
+
+            private void openFile(File f) {
+                Intent intent = new Intent();
+                intent.setAction(android.content.Intent.ACTION_VIEW);
+                String type = "video/*";
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Uri u = FileProvider.getUriForFile(getActivity(), "com.example.xingwei.lu.provider", f);
+                    intent.setDataAndType(u, type);
+                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                } else {
+                    intent.setDataAndType(Uri.fromFile(f), type);
+                }
                 startActivity(intent);
             }
 
@@ -113,7 +147,7 @@ public class ViedeoFragment extends BaseFragment {
                                     file.renameTo(new File(file.getParent() + "/" + newName + ".mp4"));
 
                                     showToast("更新");
-                                    List<VideoModern> imageModerns1 = new FileUtil().getVideoInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Video"
+                                    List<VideoModern> imageModerns1 = new FileUtil().getVideoInfoByPath(getActivity().getFilesDir().getAbsolutePath() + "/Video"
                                     );
                                     videoAdapter.setData(imageModerns1);
                                     renameDialog.dismiss();
@@ -135,7 +169,7 @@ public class ViedeoFragment extends BaseFragment {
             @Override
             public void share(String path) {
 
-                Uri uri = Uri.parse(path);   //图片路径
+                Uri uri = Uri.parse("content://" + getActivity().getPackageName() + "/Video/" + path);   //图片路径
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
                 intent.putExtra("sms_body", "感谢使用");            //邮件内容
@@ -145,7 +179,7 @@ public class ViedeoFragment extends BaseFragment {
             }
         });
         rvVideo.setAdapter(videoAdapter);
-        fileUtil.getVideoInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Video", handler);
+        fileUtil.getVideoInfoByPath(getActivity().getFilesDir().getAbsolutePath() + "/Video", handler);
 
     }
 
@@ -164,7 +198,7 @@ public class ViedeoFragment extends BaseFragment {
         super.updateData(type);
         if (type.equals("video")) {
             videomoderns.clear();
-            fileUtil.getVideoInfoByPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Video", handler);
+            fileUtil.getVideoInfoByPath(getActivity().getFilesDir().getAbsolutePath() + "/Video", handler);
         }
     }
 

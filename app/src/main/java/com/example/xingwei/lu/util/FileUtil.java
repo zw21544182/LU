@@ -67,19 +67,21 @@ public class FileUtil {
                 //子线程
                 super.run();
                 //遍历文件
+                List<VideoModern> videoModerns = new ArrayList<>();
+                Message message = new Message();
                 for (File videoFile : videoFiles
                         ) {
-                    Message message = new Message();
 
                     VideoModern videoModern = new VideoModern();
                     videoModern.setPath(videoFile.getAbsolutePath());
                     videoModern.setFileName(videoFile.getName());
                     videoModern.setDuration(getRingDuring(videoFile.getAbsolutePath()));
                     videoModern.setTime("保存于 " + getTimeByName(videoFile.getPath()));
-                    message.obj = videoModern;
-                    message.what = 1;
-                    handler.sendMessage(message);
+                    videoModerns.add(videoModern);
                 }
+                message.obj = videoModerns;
+                message.what = 1;
+                handler.sendMessage(message);
             }
         }.start();
 
