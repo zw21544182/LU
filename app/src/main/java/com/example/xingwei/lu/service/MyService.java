@@ -336,9 +336,11 @@ public class MyService extends Service {
             mediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
             mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
             mediaRecorder.setOutputFile(file.getAbsolutePath());
-            mediaRecorder.setVideoSize(windowWidth, windowHeight);  //after setVideoSource(), setOutFormat()
+            if (Build.VERSION.SDK_INT >= 23) {
+                mediaRecorder.setVideoSize(windowWidth, windowHeight);  //after setVideoSource(), setOutFormat()
+                mediaRecorder.setVideoEncodingBitRate(5 * windowWidth * windowHeight);
+            }
             mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);  //after setOutputFormat()
-            mediaRecorder.setVideoEncodingBitRate(5 * windowWidth * windowHeight);
             mediaRecorder.setVideoFrameRate(60); //after setVideoSource(), setOutFormat()
 
             try {

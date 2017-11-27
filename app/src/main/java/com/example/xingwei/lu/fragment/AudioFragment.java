@@ -128,7 +128,7 @@ public class AudioFragment extends BaseFragment {
         fileUtil = FileUtil.getInstance(mainActivity);
 
         audiomoderns.clear();
-        rvAudio.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvAudio.setLayoutManager(new LinearLayoutManager(getActivity()));
         audioAdapter = new AudioAdapter(audiomoderns, getActivity(), new AudioAdapter.ViewClick() {
             @Override
             public void playAudio(String path) {
@@ -165,8 +165,10 @@ public class AudioFragment extends BaseFragment {
                                 if (fileUtil.isRename(newName, audioPath)) {
                                     showToast("已存在相同文件名");
                                 } else {
+                                    String last = path.substring(path.length() - 4, path.length());
+                                    Log.d("xww", last);
                                     Log.d("xwl", "old name " + file.getAbsolutePath());
-                                    file.renameTo(new File(file.getParent() + "/" + newName + ".mp4"));
+                                    file.renameTo(new File(file.getParent() + "/" + newName + last.trim()));
 
                                     showToast("更新");
                                     fileUtil.getAudioInfoByPath(audioPath

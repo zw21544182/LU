@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.projection.MediaProjectionManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -335,14 +336,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 } else {
                     //如果是摄像界面
-                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED ?
-                            true : false) {//检查是否有拍照权限
-                        CameraActivity.enterCamera(this);//高逼格 哈哈哈
-                    } else {//如果没有
-                        requestPermissions(new String[]{Manifest.permission.CAMERA,
-                                Manifest.permission.CAMERA}, 2);//申请拍照权限 回调onRequestPermissionsResult方法
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED ?
+                                true : false) {//检查是否有拍照权限
+                            CameraActivity.enterCamera(this);//高逼格 哈哈哈
+                            return;
+                        } else {//如果没有
+                            requestPermissions(new String[]{Manifest.permission.CAMERA,
+                                    Manifest.permission.CAMERA}, 2);//申请拍照权限 回调onRequestPermissionsResult方法
+                            return;
+                        }
 
                     }
+                    CameraActivity.enterCamera(this);//高逼格 哈哈哈
                 }
                 break;
         }
@@ -352,15 +358,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         //在界面布局加载完成后要运行的代码（解决大黑屏bug）
-        isPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ?
-                true : false;//检查是否有读写权限
-        if (isPermission && hasFocus && !isInitData) {
-            startIntent();
-            isInitData = true;
-        }
-        if (hasFocus && !isPermission) {
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+        if (Build.VERSION.SDK_INT >= 23) {
+            isPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ?
+                    true : false;//检查是否有读写权限
+            if (isPermission && hasFocus && !isInitData) {
+                startIntent();
+                isInitData = true;
+            }
+            if (hasFocus && !isPermission) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
 
+            }
         }
     }
 

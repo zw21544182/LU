@@ -29,6 +29,10 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         toastUtil.showToast(content);
     }
 
+    public void showToast(int resourecId) {
+        toastUtil.showToast(getString(resourecId));
+    }
+
     @Override
     public void onClick(View view) {
         click(view);
