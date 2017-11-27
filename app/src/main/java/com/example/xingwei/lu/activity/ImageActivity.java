@@ -1,14 +1,20 @@
 package com.example.xingwei.lu.activity;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.example.xingwei.lu.R;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 /**
  * 创建时间: 2017/11/26
@@ -33,7 +39,20 @@ public class ImageActivity extends Activity {
 
         setContentView(R.layout.activity_image);
         image = (ImageView) findViewById(R.id.image);
-        String imagePath = getIntent().getExtras().getString("path");
-        Glide.with(this).load(imagePath).into(image);
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+        if (action.equals(Intent.ACTION_SEND) && type.equals("image/*")) {
+            Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+            if (uri != null) {
+                try {
+                    FileInputStream fileInputStream = new FileInputStream(uri.getPath());
+                    Bitmap bitmap = BitmapFactory.decodeStream(fileInputStream);
+                    image.setImageBitmap(bitmap);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

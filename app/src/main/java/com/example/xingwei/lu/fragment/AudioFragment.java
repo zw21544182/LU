@@ -106,6 +106,8 @@ public class AudioFragment extends BaseFragment {
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
+        if (audiomoderns == null)
+            audiomoderns = new ArrayList<>();
         mainActivity = (MainActivity) getActivity();
         switch (type) {
             case PICTURE:
@@ -113,6 +115,7 @@ public class AudioFragment extends BaseFragment {
                 break;
             case MOVIE:
                 audioPath = mainActivity.getFilesDir().getAbsolutePath() + "/Movie";
+
                 break;
             case VIDEO:
                 audioPath = mainActivity.getFilesDir().getAbsolutePath() + "/Video";
@@ -123,8 +126,7 @@ public class AudioFragment extends BaseFragment {
 
         }
         fileUtil = FileUtil.getInstance(mainActivity);
-        if (audiomoderns == null)
-            audiomoderns = new ArrayList<>();
+
         audiomoderns.clear();
         rvAudio.setLayoutManager(new LinearLayoutManager(getContext()));
         audioAdapter = new AudioAdapter(audiomoderns, getActivity(), new AudioAdapter.ViewClick() {

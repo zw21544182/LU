@@ -47,7 +47,13 @@
         <activity android:name=".activity.AboutActivity" />
         <activity
             android:name=".activity.ImageActivity"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".service.TestService"

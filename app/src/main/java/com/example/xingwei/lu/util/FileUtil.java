@@ -70,27 +70,6 @@ public class FileUtil {
                 //初始化集合
                 setAudioData(audioFiles, handler);
             }
-            private synchronized void setAudioData(File[] audioFiles, Handler handler) {
-                audioModerns.clear();
-                //遍历文件
-                for (File audioFile : audioFiles
-                        ) {
-                    Log.d("xwls", audioFile.getName()
-                    );
-                    AudioModern audioModern = new AudioModern();
-                    audioModern.setPath(audioFile.getAbsolutePath());
-                    audioModern.setFileName(audioFile.getName());
-                    if (audioFile.getName().endsWith("mp4")) {
-                        audioModern.setDuration(getRingDuring(audioFile.getAbsolutePath()));
-                    }
-                    audioModern.setTime("保存于 " + getTimeByName(audioFile.getPath()));
-                    audioModerns.add(audioModern);
-                }
-                Message message = new Message();
-                message.obj = audioModerns;
-                message.what = 1;
-                handler.sendMessage(message);
-            }
         }.start();
 
 
@@ -98,6 +77,27 @@ public class FileUtil {
 
 
 
+    private synchronized void setAudioData(File[] audioFiles, Handler handler) {
+        audioModerns.clear();
+        //遍历文件
+        for (File audioFile : audioFiles
+                ) {
+            Log.d("xwls", audioFile.getName()
+            );
+            AudioModern audioModern = new AudioModern();
+            audioModern.setPath(audioFile.getAbsolutePath());
+            audioModern.setFileName(audioFile.getName());
+            if (audioFile.getName().endsWith("mp4")) {
+                audioModern.setDuration(getRingDuring(audioFile.getAbsolutePath()));
+            }
+            audioModern.setTime("保存于 " + getTimeByName(audioFile.getPath()));
+            audioModerns.add(audioModern);
+        }
+        Message message = new Message();
+        message.obj = audioModerns;
+        message.what = 1;
+        handler.sendMessage(message);
+    }
 
     private String getTimeByName(String path) {
         String time = "";
