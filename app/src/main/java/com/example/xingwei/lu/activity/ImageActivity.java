@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.support.annotation.Nullable;
 import android.view.Window;
 import android.view.WindowManager;
@@ -13,7 +14,6 @@ import android.widget.ImageView;
 
 import com.example.xingwei.lu.R;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 /**
@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 
 public class ImageActivity extends Activity {
     private ImageView image;
+    private ParcelFileDescriptor mInputPFD;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,23 +37,25 @@ public class ImageActivity extends Activity {
         int flag = WindowManager.LayoutParams.FLAG_FULLSCREEN;
         //设置当前窗体为全屏显示
         window.setFlags(flag, flag);
-
         setContentView(R.layout.activity_image);
         image = (ImageView) findViewById(R.id.image);
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        String type = intent.getType();
-        if (action.equals(Intent.ACTION_SEND) && type.equals("image/*")) {
-            Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-            if (uri != null) {
-                try {
-                    FileInputStream fileInputStream = new FileInputStream(uri.getPath());
-                    Bitmap bitmap = BitmapFactory.decodeStream(fileInputStream);
-                    image.setImageBitmap(bitmap);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
+        Intent returnIntent = getIntent();
+        String action = returnIntent.getAction();
+        String type = returnIntent.getType();
+        Uri returnUri = null;
+        if (action.equals(Intent.ACTION_VIEW) && type.equals("image/*")) {
+            returnUri = returnIntent.getData();
+
+        } else if (action.equals(Intent.ACTION_SEND)) {
+            returnUri = returnIntent.getParcelableExtra(Intent.EXTRA_STREAM);
+
         }
+        try {
+            mInputPFD = getContentResolver().openFileDescriptor(returnUri, "r");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        Bitmap bitmap = BitmapFactory.decodeFileDescriptor(mInputPFD.getFileDescriptor());
+        image.setImageBitmap(bitmap);
     }
 }

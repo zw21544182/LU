@@ -147,7 +147,6 @@ public class AudioFragment extends BaseFragment {
                 Uri u = FileProvider.getUriForFile(getActivity(), "com.example.xingwei.lu.provider", f);
                 intent.setDataAndType(u, type);
                 intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-
                 startActivity(intent);
             }
 

@@ -8,7 +8,7 @@ package com.example.xingwei.lu.modern;
 
 public class AudioModern {
     private String fileName;
-    private String duration;
+    private String duration = "";
     private String time;
     private String path;
 
