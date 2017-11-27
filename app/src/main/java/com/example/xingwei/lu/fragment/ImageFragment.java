@@ -170,12 +170,18 @@ public class ImageFragment extends BaseFragment {
             @Override
             public void share(String path) {
 
-                Uri uri = Uri.parse(path);   //图片路径
                 Intent intent = new Intent();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    File f = new File(path);
+                    if (!f.exists()) {
+                        return;
+                    }
+                    Uri u = FileProvider.getUriForFile(getActivity(), getActivity().getApplicationContext().getPackageName() + ".provider", f);
+                    intent.putExtra(Intent.EXTRA_STREAM, u);
+                }
                 intent.setAction(Intent.ACTION_SEND);
                 intent.putExtra("sms_body", "感谢使用");            //邮件内容
-                intent.putExtra(Intent.EXTRA_STREAM, uri);
-                intent.setType("image/png");                    //设置类型
+                intent.setType("image/*");                    //设置类型
                 getActivity().startActivity(intent);
             }
         });

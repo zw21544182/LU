@@ -103,7 +103,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         videoViewHolder.ibShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewClick.share(data.get(position).getFileName());
+                viewClick.share(data.get(position).getPath());
             }
         });
         videoViewHolder.chose.setChecked(false);
