@@ -31,6 +31,11 @@ public class PdfFragment extends BaseFragment {
     private PdfAdapter pdfAdapter;
 
     @Override
+    public AudioFragment.TYPE getType() {
+        return null;
+    }
+
+    @Override
     public void changState() {
 
     }

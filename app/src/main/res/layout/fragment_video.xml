@@ -18,10 +18,11 @@
             android:text="@string/path" />
 
         <TextView
+            android:id="@+id/tvFileDir"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
-            android:text="LU/Video"
+            android:text=""
             android:textColor="#458B74" />
     </LinearLayout>
 

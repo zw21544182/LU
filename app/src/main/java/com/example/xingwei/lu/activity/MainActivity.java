@@ -29,11 +29,9 @@ import android.widget.TextView;
 import com.example.xingwei.lu.R;
 import com.example.xingwei.lu.base.BaseFragment;
 import com.example.xingwei.lu.base.MyApp;
-import com.example.xingwei.lu.fragment.ImageFragment;
+import com.example.xingwei.lu.fragment.AudioFragment;
 import com.example.xingwei.lu.fragment.PdfFragment;
-import com.example.xingwei.lu.fragment.RecordFragment;
 import com.example.xingwei.lu.fragment.SetFragment;
-import com.example.xingwei.lu.fragment.ViedeoFragment;
 import com.example.xingwei.lu.util.ToastUtil;
 
 import java.io.File;
@@ -49,9 +47,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MediaProjectionManager mMediaProjectionManager;
     private FragmentTransaction mfragmentTransaction;
     private BaseFragment mCurrentFrgment;
-    private ViedeoFragment viedeoFragment;
-    private ImageFragment imageFragment;
-    private RecordFragment recordFragment;
     private PdfFragment pdfFragment;
     private SetFragment setFragment;
     private TextView tvTitle;
@@ -65,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean isExit;
     private boolean isPermission;
     private boolean isInitData = false;
+    private AudioFragment viedeoFragment, imageFragment, recordFragment;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -78,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     btChose.setText("选择");//设置选择按钮上的文字为"选择"
                     tvTitle.setText("录屏");//设置TextView标题为"录屏"
                     if (viedeoFragment == null)//判断viedeoFragment是否为空
-                        viedeoFragment = new ViedeoFragment();//如果为空则创建
+                        viedeoFragment = new AudioFragment(AudioFragment.TYPE.VIDEO);//如果为空则创建
                     switchFragment(viedeoFragment);//将viedeoFragment子界面加载到主界面上
                     return true;
                 case R.id.navigation_dashboard:
@@ -87,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     btChose.setText("选择");//设置选择按钮上的文字为"选择"
                     tvTitle.setText("截图");//设置TextView标题为"截图"
                     if (imageFragment == null)//判断imageFragment是否为空
-                        imageFragment = new ImageFragment();//如果为空则创建
+                        imageFragment = new AudioFragment(AudioFragment.TYPE.PICTURE);//如果为空则创建
                     switchFragment(imageFragment);//将imageFragment子界面加载到主界面上
                     return true;
                 case R.id.navigation_record:
@@ -100,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         File file = new File(getFilesDir(), "Movie");
                         if (!file.exists())
                             file.mkdir();
-                        recordFragment = new RecordFragment(file.getAbsolutePath());
+                        recordFragment = new AudioFragment(AudioFragment.TYPE.MOVIE);
                     }
                     switchFragment(recordFragment);
                     return true;
@@ -154,12 +150,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         popupWindow.dismiss();//让popupWindow消失
                         Intent intent = new Intent();
                         intent.setAction("com.audioeadd");
-                        if (mCurrentFrgment instanceof ViedeoFragment) {//判断是否为录像界面
-                            intent.putExtra("type", "video");//设置类型为video
-                        } else {
-                            intent.putExtra("type", "image");//设置类型为image,用于区分子界面更新
+                        switch (mCurrentFrgment.getType()) {
+                            case VIDEO:
+                                intent.putExtra("type", "video");//设置类型为video
+                                break;
+                            case PICTURE:
+                                intent.putExtra("type", "image");//设置类型为image,用于区分子界面更新
+                                break;
                         }
-
                         sendBroadcast(intent);//发送广播通知更新子条目(还有多少条记录)
                         break;
                     case 0:
@@ -357,9 +355,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         isPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ?
                 true : false;//检查是否有读写权限
         if (isPermission && hasFocus && !isInitData) {
-            if (viedeoFragment != null) {
-                viedeoFragment.initData(null);
-            }
             startIntent();
             isInitData = true;
         }

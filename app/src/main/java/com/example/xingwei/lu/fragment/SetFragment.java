@@ -90,6 +90,11 @@ public class SetFragment extends BaseFragment {
     }
 
     @Override
+    public AudioFragment.TYPE getType() {
+        return null;
+    }
+
+    @Override
     protected void initEvent() {
         super.initEvent();
         imageView.setOnClickListener(this);

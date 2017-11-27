@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.xingwei.lu.fragment.AudioFragment;
 import com.example.xingwei.lu.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     public void onClick(View view) {
         click(view);
     }
+
+    public abstract AudioFragment.TYPE getType();
 
 
     @Nullable
@@ -98,13 +101,15 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     protected void updateData(String type) {
     }
-    protected  void grantUriPermission (Context context, Uri fileUri, Intent intent) {
+
+    protected void grantUriPermission(Context context, Uri fileUri, Intent intent) {
         List<ResolveInfo> resInfoList = context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         for (ResolveInfo resolveInfo : resInfoList) {
             String packageName = resolveInfo.activityInfo.packageName;
             context.grantUriPermission(packageName, fileUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
     }
+
     @Override
     public void onDetach() {
         super.onDetach();

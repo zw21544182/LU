@@ -1,22 +1,20 @@
 package com.example.xingwei.lu.util;
 
+import android.content.Context;
 import android.media.MediaMetadataRetriever;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.example.xingwei.lu.modern.ImageModern;
+import com.example.xingwei.lu.fragment.AudioFragment;
+import com.example.xingwei.lu.modern.AudioModern;
 import com.example.xingwei.lu.modern.PdfModule;
-import com.example.xingwei.lu.modern.VideoModern;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static android.os.Environment.getExternalStorageDirectory;
 
 /**
  * 创建时间: 2017/10/18
@@ -25,39 +23,42 @@ import static android.os.Environment.getExternalStorageDirectory;
  */
 
 public class FileUtil {
-    public static final int IMAGE = 44;
-    public static final int VIDEO = 2;
-    public static final int MOVIE = 3;
-    List<VideoModern> videoModerns;
-    List<VideoModern> movieModerns;
-    List<ImageModern> imageModerns;
-    SimpleDateFormat dateFormat, format;
 
-    public FileUtil() {
+
+    private SimpleDateFormat dateFormat, format;
+    private List<AudioModern> audioModerns;
+    private Context context;
+    private static FileUtil fileUtil;
+
+    private FileUtil(Context context) {
+        this.context = context;
         dateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
         format = new SimpleDateFormat("yyyy年MM月dd日");
-        movieModerns = new ArrayList<>();
 
     }
 
-
-    public void getVideoInfoByPath(String path, final Handler handler) {
-        if (videoModerns == null) {
-            //如果videModerns为空
-            videoModerns = new ArrayList<>();//新建集合
+    public static FileUtil getInstance(Context context) {
+        if (fileUtil == null) {
+            fileUtil = new FileUtil(context);
         }
-        videoModerns.clear();//清除集合中所有的元素
-        File file = new File(path);//通过路径新建一个文件对象
+        return fileUtil;
+    }
 
+    public synchronized void getAudioInfoByPath(String path, final Handler handler) {
+        if (audioModerns == null) {
+            //如果videModerns为空
+            audioModerns = new ArrayList<>();//新建集合
+        }
+        File file = new File(path);//通过路径新建一个文件对象
         if (!file.exists()) {//如果文件不存在
             return;//返回
         }
-        final File[] videoFiles = file.listFiles();//获取file文件夹下所有的子文件
-        if (videoFiles == null) {//如果viddeoFiles为空
+        final File[] audioFiles = file.listFiles();//获取file文件夹下所有的子文件
+        if (audioFiles == null) {//如果viddeoFiles为空
             handler.sendEmptyMessage(0);//发送通知
             return;//返回
         }
-        if (videoFiles.length == 0) {//如果videoFiles的长度为0
+        if (audioFiles.length == 0) {//如果audioFiles的长度为0
             handler.sendEmptyMessage(0);//发送通知
             return;//返回
         }
@@ -66,20 +67,27 @@ public class FileUtil {
             public void run() {
                 //子线程
                 super.run();
+                //初始化集合
+                setAudioData(audioFiles, handler);
+            }
+            private synchronized void setAudioData(File[] audioFiles, Handler handler) {
+                audioModerns.clear();
                 //遍历文件
-                List<VideoModern> videoModerns = new ArrayList<>();
-                Message message = new Message();
-                for (File videoFile : videoFiles
+                for (File audioFile : audioFiles
                         ) {
-
-                    VideoModern videoModern = new VideoModern();
-                    videoModern.setPath(videoFile.getAbsolutePath());
-                    videoModern.setFileName(videoFile.getName());
-                    videoModern.setDuration(getRingDuring(videoFile.getAbsolutePath()));
-                    videoModern.setTime("保存于 " + getTimeByName(videoFile.getPath()));
-                    videoModerns.add(videoModern);
+                    Log.d("xwls", audioFile.getName()
+                    );
+                    AudioModern audioModern = new AudioModern();
+                    audioModern.setPath(audioFile.getAbsolutePath());
+                    audioModern.setFileName(audioFile.getName());
+                    if (audioFile.getName().endsWith("mp4")) {
+                        audioModern.setDuration(getRingDuring(audioFile.getAbsolutePath()));
+                    }
+                    audioModern.setTime("保存于 " + getTimeByName(audioFile.getPath()));
+                    audioModerns.add(audioModern);
                 }
-                message.obj = videoModerns;
+                Message message = new Message();
+                message.obj = audioModerns;
                 message.what = 1;
                 handler.sendMessage(message);
             }
@@ -88,63 +96,8 @@ public class FileUtil {
 
     }
 
-    /**
-     * @param path Environment.getExternalStorageDirectory().getAbsolutePath()+"/LU/Video"
-     * @return
-     */
-    public List<VideoModern> getVideoInfoByPath(String path) {
-        if (videoModerns == null) {
-            videoModerns = new ArrayList<>();
-        }
-        videoModerns.clear();
-        File file = new File(path);
-        if (!file.exists()) {
-            return videoModerns;
-        }
-        File[] videoFiles = file.listFiles();
-        if (videoFiles.length == 0) {
-            return videoModerns;
-        }
-        for (File videoFile : videoFiles
-                ) {
-            VideoModern videoModern = new VideoModern();
-            videoModern.setPath(videoFile.getAbsolutePath());
-            videoModern.setFileName(videoFile.getName());
-            videoModern.setDuration(getRingDuring(videoFile.getAbsolutePath()));
-            videoModern.setTime("保存于 " + getTimeByName(videoFile.getPath()));
-            Log.d("xwl", videoModern.toString());
-            videoModerns.add(videoModern);
-        }
-        return videoModerns;
-    }
 
-    /**
-     * @param path Environment.getExternalStorageDirectory().getAbsolutePath()+"/LU/Pictures"
-     * @return
-     */
-    public List<ImageModern> getImageInfoByPath(String path) {
-        if (imageModerns == null) {
-            imageModerns = new ArrayList<>();
-        }
-        imageModerns.clear();
-        File file = new File(path);
-        if (!file.exists()) {
-            return imageModerns;
-        }
-        File[] imageFiles = file.listFiles();
-        if (imageFiles.length == 0) {
-            return imageModerns;
-        }
-        for (File imageFile : imageFiles
-                ) {
-            ImageModern imageModern = new ImageModern();
-            imageModern.setPath(imageFile.getAbsolutePath());
-            imageModern.setFileName(imageFile.getName());
-            imageModern.setTime("保存于 " + getTimeByName(imageFile.getPath()));
-            imageModerns.add(imageModern);
-        }
-        return imageModerns;
-    }
+
 
     private String getTimeByName(String path) {
         String time = "";
@@ -198,16 +151,19 @@ public class FileUtil {
     }
 
 
-    public boolean isRename(String newName, int type) {
+    public boolean isRename(String newName, AudioFragment.TYPE type) {
         String path = "";
         boolean res = false;
-        if (type == IMAGE) {
-            path = getExternalStorageDirectory().getAbsolutePath() + "/LU/Pictures";
-        } else if (type == VIDEO) {
-            path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Video";
-        } else {
-            path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/LU/Movie";
-
+        switch (type) {
+            case PICTURE:
+                path = context.getFilesDir().getAbsolutePath() + "Pictures";
+                break;
+            case VIDEO:
+                path = context.getFilesDir().getAbsolutePath() + "Video";
+                break;
+            case MOVIE:
+                path = context.getFilesDir().getAbsolutePath() + "Moive";
+                break;
         }
         File file = new File(path);
         File[] files = file.listFiles();

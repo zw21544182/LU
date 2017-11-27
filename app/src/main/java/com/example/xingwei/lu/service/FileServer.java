@@ -18,6 +18,7 @@ import com.example.xingwei.lu.util.FileUtil;
 public class FileServer extends Service {
     private MyApp myApp;
     Thread thread;
+    private FileUtil fileUtil;
 
     @Nullable
     @Override
@@ -28,11 +29,12 @@ public class FileServer extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        fileUtil = FileUtil.getInstance(this);
         myApp = (MyApp) getApplication();
         thread = new Thread() {
             public void run() {
                 super.run();
-                new FileUtil().checkPdf(Environment.getExternalStorageDirectory().getAbsolutePath());
+                fileUtil.checkPdf(Environment.getExternalStorageDirectory().getAbsolutePath());
                 Intent intent = new Intent();
                 intent.setAction("com.audioeadd");
                 intent.putExtra("type", "pdf");
