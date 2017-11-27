@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.example.xingwei.lu.fragment.AudioFragment;
 import com.example.xingwei.lu.modern.AudioModern;
 import com.example.xingwei.lu.modern.PdfModule;
 
@@ -151,20 +150,10 @@ public class FileUtil {
     }
 
 
-    public boolean isRename(String newName, AudioFragment.TYPE type) {
-        String path = "";
+    public boolean isRename(String newName,String audioPath) {
+        String path = audioPath;
         boolean res = false;
-        switch (type) {
-            case PICTURE:
-                path = context.getFilesDir().getAbsolutePath() + "Pictures";
-                break;
-            case VIDEO:
-                path = context.getFilesDir().getAbsolutePath() + "Video";
-                break;
-            case MOVIE:
-                path = context.getFilesDir().getAbsolutePath() + "Moive";
-                break;
-        }
+
         File file = new File(path);
         File[] files = file.listFiles();
         for (File f : files

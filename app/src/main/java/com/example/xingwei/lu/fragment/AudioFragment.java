@@ -144,18 +144,15 @@ public class AudioFragment extends BaseFragment {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
                 String type = getMiType(f);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    Uri u = FileProvider.getUriForFile(getActivity(), "com.example.xingwei.lu.provider", f);
-                    intent.setDataAndType(u, type);
-                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                } else {
-                    intent.setDataAndType(Uri.fromFile(f), type);
-                }
+                Uri u = FileProvider.getUriForFile(getActivity(), "com.example.xingwei.lu.provider", f);
+                intent.setDataAndType(u, type);
+                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
                 startActivity(intent);
             }
 
             @Override
-            public void rename(String path) {
+            public void rename(final String path) {
                 final File file = new File(path);
                 String oldName = file.getName().substring(0, file.getName().length() - 4);
                 renameDialog = new RenameDialog(getActivity(), R.layout.dialog_rename, new int[]{R.id.llnegative, R.id.llpostive});
@@ -165,14 +162,14 @@ public class AudioFragment extends BaseFragment {
                         switch (view.getId()) {
                             case R.id.llpostive:
                                 String newName = renameDialog.getRenameString();
-                                if (fileUtil.isRename(newName, type)) {
+                                if (fileUtil.isRename(newName, audioPath)) {
                                     showToast("已存在相同文件名");
                                 } else {
                                     Log.d("xwl", "old name " + file.getAbsolutePath());
                                     file.renameTo(new File(file.getParent() + "/" + newName + ".mp4"));
 
                                     showToast("更新");
-                                    fileUtil.getAudioInfoByPath(getActivity().getFilesDir().getAbsolutePath() + "/Audio"
+                                    fileUtil.getAudioInfoByPath(audioPath
                                             , handler);
                                     renameDialog.dismiss();
                                 }
