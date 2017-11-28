@@ -2,7 +2,6 @@ package com.example.xingwei.lu.fragment;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -192,11 +191,8 @@ public class AudioFragment extends BaseFragment {
                 if (!f.exists()) {
                     return;
                 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-
                     Uri u = FileProvider.getUriForFile(getActivity(), getActivity().getApplicationContext().getPackageName() + ".provider", f);
                     intent.putExtra(Intent.EXTRA_STREAM, u);
-                }
                 intent.setAction(Intent.ACTION_SEND);
                 intent.putExtra("sms_body", "感谢使用");            //邮件内容
                 intent.setType(getMiType(f));                    //设置类型

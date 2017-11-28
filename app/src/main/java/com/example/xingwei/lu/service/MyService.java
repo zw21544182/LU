@@ -43,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static android.content.ContentValues.TAG;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * 创建时间: 2017/11/15
@@ -369,6 +370,7 @@ public class MyService extends Service {
 
     private void event_enterMain(Context context) {
         Intent in = new Intent(context, MainActivity.class);
+        in.addFlags(FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(in);
     }
 

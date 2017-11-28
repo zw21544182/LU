@@ -12,6 +12,7 @@ import com.example.xingwei.lu.modern.PdfModule;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -75,7 +76,6 @@ public class FileUtil {
     }
 
 
-
     private synchronized void setAudioData(File[] audioFiles, Handler handler) {
         audioModerns.clear();
         //遍历文件
@@ -86,12 +86,14 @@ public class FileUtil {
             AudioModern audioModern = new AudioModern();
             audioModern.setPath(audioFile.getAbsolutePath());
             audioModern.setFileName(audioFile.getName());
+            audioModern.setLastModifyTime(audioFile.lastModified());
             if (audioFile.getName().endsWith("mp4")) {
                 audioModern.setDuration(getRingDuring(audioFile.getAbsolutePath()));
             }
             audioModern.setTime("保存于 " + getTimeByName(audioFile.getPath()));
             audioModerns.add(audioModern);
         }
+        Collections.sort(audioModerns);
         Message message = new Message();
         message.obj = audioModerns;
         message.what = 1;
@@ -124,7 +126,7 @@ public class FileUtil {
      *
      * @param strPath 根文件路径
      */
-    public void checkPdf(String strPath) {
+    public synchronized void checkPdf(String strPath) {
         PdfModule pdfModule = new PdfModule();
         File dir = new File(strPath);
         File[] files = dir.listFiles(); // 该文件目录下文件全部放入数组
@@ -140,7 +142,6 @@ public class FileUtil {
                     pdfModule.setTime(getTimeByName(strFileName));
                     pdfModule.saveOrUpdate("path = ?", pdfModule.getPath());
                     pdfModule.clearSavedState();
-
                 } else {
                     continue;
                 }
@@ -150,7 +151,7 @@ public class FileUtil {
     }
 
 
-    public boolean isRename(String newName,String audioPath) {
+    public boolean isRename(String newName, String audioPath) {
         String path = audioPath;
         boolean res = false;
 
