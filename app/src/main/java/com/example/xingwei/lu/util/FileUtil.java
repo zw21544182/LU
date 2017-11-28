@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.example.xingwei.lu.modern.AudioModern;
 import com.example.xingwei.lu.modern.PdfModule;
+import com.example.xingwei.lu.modern.PdfPathMoudle;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -127,13 +128,14 @@ public class FileUtil {
      *
      * @param strPath 根文件路径
      */
-    public synchronized void checkPdf(String strPath) {
+    public void checkPdf(String strPath) {
         PdfModule pdfModule = new PdfModule();
         File dir = new File(strPath);
         File[] files = dir.listFiles(); // 该文件目录下文件全部放入数组
         if (files != null) {
             for (int i = 0; i < files.length; i++) {
                 String fileName = files[i].getName();
+                Log.d("xww", fileName);
                 if (files[i].isDirectory()) { // 判断是文件还是文件夹
                     checkPdf(files[i].getAbsolutePath()); // 获取文件绝对路径
                 } else if (fileName.endsWith("pdf")) { // 判断文件名是否以.pdf结尾
@@ -167,5 +169,12 @@ public class FileUtil {
             }
         }
         return res;
+    }
+
+    public void checkPdf(List<PdfPathMoudle> pdfPathMoudles) {
+        for (PdfPathMoudle pdfPathMoudle : pdfPathMoudles
+                ) {
+            checkPdf(pdfPathMoudle.getPath());
+        }
     }
 }

@@ -20,4 +20,8 @@
     <string name="setsize">视频尺寸设置:</string>
     <string name="no_video">没有该视频文件</string>
     <string name="no_audio">没有该媒体文件</string>
+    <string name="already" >您已经选择该文件夹了</string>
+    <string name="add">增加</string>
+    <string name="pdfpath">pdf文件保存路径</string>
+    <string name="addPath">请前往设置界面增加扫描文件路径</string>
 </resources>

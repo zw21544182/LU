@@ -85,6 +85,24 @@
         android:background="#458B74" />
 
     <LinearLayout
+        android:id="@+id/pdfChoose"
+        style="@style/LayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/camearwidth"
+        android:padding="@dimen/mar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="pdf检测设置" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#458B74" />
+
+    <LinearLayout
         android:id="@+id/weixin"
         style="@style/LayoutStyle"
         android:layout_width="match_parent"

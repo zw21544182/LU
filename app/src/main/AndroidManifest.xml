@@ -57,6 +57,7 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.PdfFilePathActivty" />
 
         <service
             android:name=".service.TestService"

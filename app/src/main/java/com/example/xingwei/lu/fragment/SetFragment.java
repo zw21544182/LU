@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 
 import com.example.xingwei.lu.R;
 import com.example.xingwei.lu.activity.AboutActivity;
+import com.example.xingwei.lu.activity.PdfFilePathActivty;
 import com.example.xingwei.lu.base.BaseFragment;
 import com.example.xingwei.lu.util.SharedPreferencesUtil;
 import com.example.xingwei.lu.util.ToastUtil;
@@ -36,6 +37,9 @@ public class SetFragment extends BaseFragment {
     private LinearLayout update;
     private LinearLayout size;
     private LinearLayout weixin;
+    private LinearLayout pdfChoose;
+
+
     private ToastUtil toastUtil;
     private String headImagePath;
     private ProgressDialog progressDialog;
@@ -86,6 +90,7 @@ public class SetFragment extends BaseFragment {
         update = (LinearLayout) view.findViewById(R.id.update);
         size = (LinearLayout) view.findViewById(R.id.size);
         weixin = (LinearLayout) view.findViewById(R.id.weixin);
+        pdfChoose = (LinearLayout) view.findViewById(R.id.pdfChoose);
 
     }
 
@@ -101,6 +106,7 @@ public class SetFragment extends BaseFragment {
         about.setOnClickListener(this);
         update.setOnClickListener(this);
         size.setOnClickListener(this);
+        pdfChoose.setOnClickListener(this);
     }
 
     @Override
@@ -134,7 +140,15 @@ public class SetFragment extends BaseFragment {
             case R.id.size:
                 showDialog();
                 break;
+            case R.id.pdfChoose:
+                enterChoose();
+                break;
         }
+    }
+
+    private void enterChoose() {
+        Intent intent = new Intent(getActivity(), PdfFilePathActivty.class);
+        startActivity(intent);
     }
 
     private void showDialog() {
