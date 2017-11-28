@@ -2,7 +2,7 @@
 <litepal>
     <dbname value="xingweilu"></dbname>
 
-    <version value="2"></version>
+    <version value="3"></version>
 
     <list>
         <mapping class="com.example.xingwei.lu.modern.PdfModule"></mapping>

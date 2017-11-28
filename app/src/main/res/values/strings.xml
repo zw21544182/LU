@@ -24,4 +24,8 @@
     <string name="add">增加</string>
     <string name="pdfpath">pdf文件保存路径</string>
     <string name="addPath">请前往设置界面增加扫描文件路径</string>
+    <string name="no_pdf">文件不存在，为您自动删除</string>
+    <string name="startservice">开启服务</string>
+    <string name="stopservice">关闭服务</string>
+    <string name="no_pdfs">未发现pdf文件，请尝试到设计界面添加新的路径</string>
 </resources>

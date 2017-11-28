@@ -62,12 +62,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean isPermission;
     private boolean isInitData = false;
     private AudioFragment viedeoFragment, imageFragment, recordFragment;
+    private boolean isPdf = false;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             isRecord = false;//指定是不是摄像子界面
+            isPdf = false;//指定不是pdf界面
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     //点击录像时运行的代码
@@ -111,7 +113,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     return true;
                 case R.id.navigation_pdf:
                     //点击课件时会运行的代码
+                    isPdf = true;
                     tvTitle.setText("课件");
+                    btChose.setVisibility(View.VISIBLE);
+                    btChose.setText("扫描");
                     if (pdfFragment == null)
                         pdfFragment = new PdfFragment();
                     switchFragment(pdfFragment);
@@ -321,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btChose://点击选择按钮时会运行的代码
-                if (!isRecord) {//如果isRecord不为空,确定不是摄像界面
+                if (!isRecord && !isPdf) {//如果isRecord不为TRUE,确定不是摄像界面
                     if (fragmentstate) {//判断子界面的状态
                         mCurrentFrgment.changState();//改变子界面的状态
                         fragmentstate = false;//设置状态值
@@ -334,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         btChose.setText("取消");
                         showPopupWindow(findViewById(R.id.content));//显示popupWindow 其中R.id.content为指定的布局
                     }
-                } else {
+                } else if (isRecord) {
                     //如果是摄像界面
                     if (Build.VERSION.SDK_INT >= 23) {
                         if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED ?
@@ -349,6 +354,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     }
                     CameraActivity.enterCamera(this);//高逼格 哈哈哈
+                } else if (isPdf) {
+                    pdfFragment.checkFile();
                 }
                 break;
         }

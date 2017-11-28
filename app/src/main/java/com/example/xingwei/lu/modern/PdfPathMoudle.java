@@ -1,5 +1,6 @@
 package com.example.xingwei.lu.modern;
 
+import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
 
 /**
@@ -9,6 +10,7 @@ import org.litepal.crud.DataSupport;
  */
 
 public class PdfPathMoudle extends DataSupport {
+    @Column(unique = true, nullable = false)
     private long id;
     private String path;
 

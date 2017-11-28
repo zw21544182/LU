@@ -12,7 +12,11 @@ import android.widget.TextView;
 import com.example.xingwei.lu.R;
 import com.example.xingwei.lu.activity.PdfActivity;
 import com.example.xingwei.lu.modern.PdfModule;
+import com.example.xingwei.lu.util.ToastUtil;
 
+import org.litepal.crud.DataSupport;
+
+import java.io.File;
 import java.util.List;
 
 /**
@@ -36,6 +40,10 @@ public class PdfAdapter extends RecyclerView.Adapter<PdfAdapter.PdfHolder> {
         notifyDataSetChanged();
     }
 
+    public void clearAll() {
+        pdfModules.clear();
+        notifyDataSetChanged();
+    }
 
     @Override
     public PdfHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -52,6 +60,15 @@ public class PdfAdapter extends RecyclerView.Adapter<PdfAdapter.PdfHolder> {
         holder.llRootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String pdfPath = pdfModules.get(position).getPath();
+                File file = new File(pdfPath);//新建一个file对象，指定文件路径为 pdfPath
+                if (!file.exists()) {//如果文件不存在
+                    DataSupport.delete(PdfModule.class, DataSupport.where("path = ?", pdfPath).find(PdfModule.class).get(0).getId());
+                    pdfModules.remove(position);
+                    notifyDataSetChanged();
+                    ToastUtil.getInstance(context).showToast(R.string.no_pdf);
+                    return;//返回
+                }
                 Intent intent = new Intent(context, PdfActivity.class);
                 intent.putExtra("path", pdfModules.get(position).getPath());
                 context.startActivity(intent);

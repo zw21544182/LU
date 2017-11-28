@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.xingwei.lu.R;
+import com.example.xingwei.lu.modern.PdfPathMoudle;
+import com.example.xingwei.lu.util.ToastUtil;
 import com.github.barteksc.pdfviewer.PDFView;
+
+import org.litepal.crud.DataSupport;
 
 import java.io.File;
 
@@ -20,9 +23,11 @@ import java.io.File;
 public class PdfActivity extends Activity {
     private PDFView pdfView;
     private String pdfPath;
+    private ToastUtil toastUtil;
 
     /**
      * 界面初始化时调用的方法
+     *
      * @param savedInstanceState
      */
     @Override
@@ -37,11 +42,15 @@ public class PdfActivity extends Activity {
      * 初始化数据
      */
     private void initData() {
+        toastUtil = ToastUtil.getInstance(this);
         pdfPath = getIntent().getExtras().getString("path");//获取上一个界面中传来的名字为path的数据（）
         Log.d("Zw", pdfPath);//控制台打印
         File file = new File(pdfPath);//新建一个file对象，指定文件路径为 pdfPath
         if (!file.exists()) {//如果文件不存在
-            Toast.makeText(this, "文件不存在", Toast.LENGTH_SHORT).show();//输出对话框
+
+
+            DataSupport.delete(PdfPathMoudle.class, DataSupport.where("path = ?", pdfPath).find(PdfPathMoudle.class).get(0).getId());
+            toastUtil.showToast(R.string.no_pdf);
             finish();//结束activity
             return;//返回
         }
