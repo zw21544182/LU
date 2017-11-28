@@ -12,8 +12,8 @@
 
         <ImageView
             android:id="@+id/ivLogo"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="@dimen/image_width"
+            android:layout_height="@dimen/image_width"
             android:layout_centerInParent="true"
             android:src="@drawable/logo" />
 
@@ -22,9 +22,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/ivLogo"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/martop"
             android:text="@string/versionInfo"
-            android:textSize="20dp" />
+            android:textSize="@dimen/versintextsize" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -33,11 +33,9 @@
         android:layout_weight="1">
 
         <TextView
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-
             android:text="@string/support" />
     </RelativeLayout>
 </LinearLayout>

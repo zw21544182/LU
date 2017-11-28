@@ -2,4 +2,23 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="image_width">100dp</dimen>
+    <dimen name="martop">5dp</dimen>
+    <dimen name="versintextsize">20dp</dimen>
+    <dimen name="actionbarheight">50dp</dimen>
+    <dimen name="buttonheight">30dp</dimen>
+    <dimen name="marbottom">20dp</dimen>
+    <dimen name="camearwidth">40dp</dimen>
+    <dimen name="itmeheight">100dp</dimen>
+    <dimen name="itmeimagewidth">120dp</dimen>
+    <dimen name="itmeimageheight">84dp</dimen>
+    <dimen name="marleft">3dp</dimen>
+    <dimen name="itmetimesize">11dp</dimen>
+    <dimen name="mar">10dp</dimen>
+    <dimen name="toptextsize">15dp</dimen>
+    <dimen name="renamedialogwidth">300dp</dimen>
+    <dimen name="renamedialogheight">120dp</dimen>
+    <dimen name="renamechoosetextsize">18dp</dimen>
+    <dimen name="pdl">2dp</dimen>
+    <dimen name="notifyheight">60dp</dimen>
 </resources>

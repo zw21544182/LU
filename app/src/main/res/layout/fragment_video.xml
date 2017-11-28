@@ -9,19 +9,19 @@
         android:layout_height="wrap_content"
         android:background="#D3D3D3"
         android:orientation="horizontal"
-        android:padding="2dp">
+        android:padding="@dimen/marleft">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="@dimen/martop"
             android:text="@string/path" />
 
         <TextView
             android:id="@+id/tvFileDir"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="@dimen/martop"
             android:text=""
             android:textColor="#458B74" />
     </LinearLayout>

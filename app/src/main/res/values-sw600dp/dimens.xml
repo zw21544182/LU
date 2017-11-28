@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<dimen name="activity_horizontal_margin">26.6667dp</dimen>
+	<dimen name="activity_vertical_margin">26.6667dp</dimen>
+	<dimen name="image_width">166.6667dp</dimen>
+	<dimen name="martop">8.3333dp</dimen>
+	<dimen name="versintextsize">33.3333dp</dimen>
+	<dimen name="actionbarheight">83.3333dp</dimen>
+	<dimen name="buttonheight">50.0000dp</dimen>
+	<dimen name="marbottom">33.3333dp</dimen>
+	<dimen name="camearwidth">66.6667dp</dimen>
+	<dimen name="itmeheight">166.6667dp</dimen>
+	<dimen name="itmeimagewidth">200.0000dp</dimen>
+	<dimen name="itmeimageheight">140.0000dp</dimen>
+	<dimen name="marleft">5.0000dp</dimen>
+	<dimen name="itmetimesize">18.3333dp</dimen>
+	<dimen name="mar">16.6667dp</dimen>
+	<dimen name="toptextsize">25.0000dp</dimen>
+	<dimen name="renamedialogwidth">500.0000dp</dimen>
+	<dimen name="renamedialogheight">200.0000dp</dimen>
+	<dimen name="renamechoosetextsize">30.0000dp</dimen>
+</resources>

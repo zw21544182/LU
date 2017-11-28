@@ -4,71 +4,71 @@
     android:layout_height="wrap_content"
     android:background="#fff"
     android:orientation="horizontal"
-    android:paddingLeft="2dp"
-    android:paddingRight="2dp"
+    android:paddingLeft="@dimen/pdl"
+    android:paddingRight="@dimen/pdl"
     android:weightSum="5">
 
     <RelativeLayout
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/notifyheight"
         android:layout_weight="1"
         android:gravity="center">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/buttonheight"
+            android:layout_height="@dimen/buttonheight"
             android:src="@drawable/logo" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/notifyheight"
         android:layout_weight="1"
         android:gravity="center">
 
         <ImageView
             android:id="@+id/ivStart"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/buttonheight"
+            android:layout_height="@dimen/buttonheight"
             android:src="@drawable/start" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/notifyheight"
         android:layout_weight="1"
         android:gravity="center">
 
         <ImageView
             android:id="@+id/ivStop"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/buttonheight"
+            android:layout_height="@dimen/buttonheight"
             android:src="@drawable/stop" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/notifyheight"
         android:layout_weight="1"
         android:gravity="center">
 
         <ImageView
             android:id="@+id/ivImage"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/buttonheight"
+            android:layout_height="@dimen/buttonheight"
             android:src="@drawable/carme" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/notifyheight"
         android:layout_weight="1"
         android:gravity="center">
 
         <ImageView
             android:id="@+id/iventerMain"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/buttonheight"
+            android:layout_height="@dimen/buttonheight"
             android:src="@drawable/home" />
     </RelativeLayout>
 

@@ -8,17 +8,17 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="@dimen/martop"
+        android:layout_marginTop="@dimen/martop"
         android:text="@string/setsize"
-        android:textSize="15dp" />
+        android:textSize="@dimen/toptextsize" />
 
     <RadioGroup
         android:id="@+id/rgSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="@dimen/mar">
 
         <RadioButton
             android:id="@+id/rb2"
@@ -61,7 +61,7 @@
                 android:layout_centerInParent="true"
                 android:padding="5dp"
                 android:text="@string/sure"
-                android:textSize="15dp" />
+                android:textSize="@dimen/toptextsize" />
         </RelativeLayout>
 
         <View
@@ -81,7 +81,7 @@
                 android:layout_centerInParent="true"
                 android:padding="5dp"
                 android:text="@string/resver"
-                android:textSize="15dp" />
+                android:textSize="@dimen/toptextsize" />
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

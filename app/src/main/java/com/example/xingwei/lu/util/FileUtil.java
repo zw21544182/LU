@@ -117,7 +117,8 @@ public class FileUtil {
         int hour = time / 1000 / 3600;
         int minute = time / 1000 / 60;
         int second = time / 1000;
-        duration = "时长: " + hour + " 时 " + minute + " 分 " + second + " 秒";
+        duration =
+                hour + " 时 " + minute + " 分 " + second + " 秒";
         return duration;
     }
 
@@ -142,6 +143,7 @@ public class FileUtil {
                     pdfModule.setTime(getTimeByName(strFileName));
                     pdfModule.saveOrUpdate("path = ?", pdfModule.getPath());
                     pdfModule.clearSavedState();
+
                 } else {
                     continue;
                 }
@@ -149,7 +151,6 @@ public class FileUtil {
         }
 
     }
-
 
     public boolean isRename(String newName, String audioPath) {
         String path = audioPath;

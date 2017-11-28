@@ -76,7 +76,7 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.AudioViewHol
             }
         });
         audioViewHolder.tvFileName.setText(data.get(position).getFileName() + "");
-        audioViewHolder.tvTime.setText(data.get(position).getTime() + "      " +
+        audioViewHolder.tvTime.setText(data.get(position).getTime() + "  " +
                 data.get(position).getDuration());
         audioViewHolder.button.setVisibility(data.get(position).getFileName().endsWith("mp4") ? View.VISIBLE : View.INVISIBLE);
         Glide.with(context).load(data.get(position).getPath()).into(audioViewHolder.image);

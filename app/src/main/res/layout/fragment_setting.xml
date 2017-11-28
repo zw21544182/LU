@@ -8,12 +8,12 @@
     <RelativeLayout
         style="@style/LayoutStyle"
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="@dimen/itmeheight">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageView"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/actionbarheight"
+            android:layout_height="@dimen/actionbarheight"
             android:layout_centerInParent="true"
             android:src="@drawable/head"
             app:civ_border_color="#FF000000"
@@ -30,13 +30,13 @@
 
         style="@style/LayoutStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:layout_height="@dimen/camearwidth"
+        android:padding="@dimen/mar">
 
         <TextView
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:text="关于我们" />
     </LinearLayout>
 
@@ -49,8 +49,8 @@
         android:id="@+id/update"
         style="@style/LayoutStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:layout_height="@dimen/camearwidth"
+        android:padding="@dimen/mar">
 
         <TextView
 
@@ -68,8 +68,8 @@
         android:id="@+id/size"
         style="@style/LayoutStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:layout_height="@dimen/camearwidth"
+        android:padding="@dimen/mar">
 
         <TextView
 
@@ -88,8 +88,8 @@
         android:id="@+id/weixin"
         style="@style/LayoutStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:layout_height="@dimen/camearwidth"
+        android:padding="@dimen/mar">
 
         <TextView
 
