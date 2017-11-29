@@ -184,6 +184,9 @@ public class MyService extends Service {
             strDate = dateFormat.format(new java.util.Date());
             pathImage = path + "/Pictures/";
             nameImage = pathImage + "pic" + strDate + ".png";
+            if (mImageReader == null) {
+                Log.d("ZWW", "mImageReader NULL");
+            }
             Image image = mImageReader.acquireLatestImage();
             if (image == null) {
                 Log.e(TAG, "image is null.");

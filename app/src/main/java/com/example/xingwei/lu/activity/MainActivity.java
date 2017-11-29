@@ -178,6 +178,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         toastUtil = ToastUtil.getInstance(this);//初始化对话框对象
         mMediaProjectionManager = (MediaProjectionManager) getApplication().getSystemService(Context.MEDIA_PROJECTION_SERVICE);//获取mMediaProjectionManager，用于录屏截图
         myApp = (MyApp) getApplication();//获取Application(保存全局变量，软件打开后，所有的界面都可以拿到的变量)
+        if (!(Build.VERSION.SDK_INT >= 23)) {
+            startIntent();
+        }
     }
 
     private void event() {
@@ -199,7 +202,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void startIntent() {
-        Log.d("xwl", "startIntent");
         if (intent != null && result != 0) {
             Log.d("xwl", "ssssssss");
             ((MyApp) getApplication()).setResultCode(result);
@@ -376,6 +378,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
 
             }
+            return;
         }
     }
 
